@@ -13,12 +13,11 @@ bogowie:
     5. najmłodszy syn goidera(rozdelop z połączenia polskiego i angielskiego rozwój/bóg rozumu i rozwoju) - jego lud od zawszę sie szykował na coś złego, 
        jakby mogło się stać i się stało. zrobił 1\5 artefaktów
     6.książe niczego i syn ifgahuta("nicek"/galaktus/"bóg niczego"/bóg galaktyki i kosmosu) - nie ma nic, nawet artefaktów, ale to robi bo ma zbyt dużą moc
-gobliny(ogień bez iskry z ciałem):
+gobliny(ogień z ciałem):
     gobliny mają dziwną kulturę która wywodzi się z tego że są nie mają sensu życia i dlatego chcą umrzeć, bo oni nie mogą wytrzymać 
     tego że nie mogą się spełnić.
     żyją 10000 lat. czczą ifgahuta, by on ich zabił i byli uwalnieni z klątwy. 0,05%(to gobliny z duchem kreatywności czyli 
     cykliści w tym świecie) mają sensu życia, a 99,05% nie widzi sensu.
-    te 5 osób(czyli 0,05%) są różni czyli jeden może być agresywny, a drugi strasznie uparty.
     każda część ducha kreatywności daje innaczej zmieniającyorganizm,
     ale zawsze daje możliwość magii ognia, a o to jak zmienia organizm:
     1.rzadziej chce pić
@@ -31,9 +30,13 @@ gobliny(ogień bez iskry z ciałem):
     (w pierwszej części jest to buzg)
     5.zna się na duchowości od urodzenia, więc też wie że to jest tylko gra i ten świat to fikcja. może tkać ogień
 elfy(para wodna z ciałem):
-    żyją 10000 lat i nic się nie zmienia, ale nie są tacy sami, ani podobni. też mają problem bo są pod reżimem i niewiedzą jak wyjść z niego. czczą
-    manreda(on właśnie robi reżim), ale z przymusu, bo jest już portal do materjalnego świata. jedzą liście, bo są roślinożercami i nie mają odwodnienia,
+    żyją 10000 lat i nic się nie zmienia, ale nie są tacy sami, ani podobni. też mają problem bo są pod reżimem i niewiedzą że w ogóle są pod reżimem. czczą
+    manreda. jedzą liście, bo są roślinożercami i nie mają odwodnienia,
     bo są sami z wody.
+    jak powstały i jak powstają:
+        elfy to para wodna z ciałem, ale ich skóra jest z lodu, więc są prawie przezroczyśli jak lud.
+        elfy są roślinożercami, bo żałądkiem jest para wodna z której są stworzeni, czyli ich żołądek tylko przyswaja liście, ponieważ ich żołądek nie może strawić czegoś z tłuszczem lub coś surowego.
+        terażnejszy rytułał wygląda tak że ojciec robi pare wodną, czyli to co daje życie oraz mama robi lud, czyli ciało, a Następnie regerenują się, by sam Manred naprawił ich wspomnienia i myślenie.
     postacie:
         Elenor:
             rola postaci:
@@ -51,7 +54,7 @@ elfy(para wodna z ciałem):
                 słyszał wtedy że oni byli wolni.
                 5.05.528r.n.e.: poznanie Elenor i zakochanie się w niej.
                 4.06.532r.n.e.: zamiana w wróżka przez cisacha w świątyni wróżek
-ludzie(ziemia z duszą):
+ludzie(ziemia z duszą goiderową):
     przywali goidera i stworzyli portal do świata materialnego, bo myśleli że goider pomoże. jedni chcieli go wykorzystać, a drudzy chcieli by im pomógł.
     teraz są gangi które chcą władzy i już nikt nie chce do goidera modlić. są defensywni i najczęściej nie walczą wprowst. żyją ok. 100 lat. jest wiele wojsk które
     walczą o niepodległóść wobec goidera, ale wiedzą że sie im nie uda.
@@ -83,7 +86,7 @@ ludzie(ziemia z duszą):
                                  treningi
                 02.08.534r.n.e. - 13.01.536r.n.e: otworzenie swego interesu robienia zabawek z kamienia np. puzzle, figurki wojowników, amulety i zakończenie swego 
                                                   biznesu
-wróżki(cichy Elf):
+wróżki(Elf z cichą duszą):
     wróżki są największą dystrybucją broni palnej. mają ciąglą wojny domowe. cześć chce tylko ziemie i nic więcej,
     a drudzy są neutralni, ale mają największy arsenał czołgów i łodzi podwodnych albo nie mają. po pierwsze czczą cisacha, bo on jest cichy i pokorny, 
     a po drugie ich stworzył. są mięsorzercami i jedzą wszystko co się rusza. żyją do wieku ok. 500 lat.

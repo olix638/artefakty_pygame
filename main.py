@@ -442,14 +442,14 @@ def gra():
     x = 100
     y = 100
     speed = 3  # pixel po pixelu
-    stamina = 100
+    stamina = 100.0
     frame = 0
-    player_idle1 = pygame.image.load("gry/artefakty_pygame/Tomek.png").convert_alpha()
-    player_idle2 = pygame.image.load("gry/artefakty_pygame/Tomek5.png").convert_alpha()
-    player_walk1 = pygame.image.load("gry/artefakty_pygame/Tomek1.png").convert_alpha()
-    player_walk2 = pygame.image.load("gry/artefakty_pygame/Tomek2.png").convert_alpha()
-    player_walk3 = pygame.image.load("gry/artefakty_pygame/Tomek3.png").convert_alpha()
-    player_walk4 = pygame.image.load("gry/artefakty_pygame/Tomek4.png").convert_alpha()
+    player_idle1 = pygame.image.load("artefakty_pygame/Tomek.png").convert_alpha()
+    player_idle2 = pygame.image.load("artefakty_pygame/Tomek5.png").convert_alpha()
+    player_walk1 = pygame.image.load("artefakty_pygame/Tomek1.png").convert_alpha()
+    player_walk2 = pygame.image.load("artefakty_pygame/Tomek2.png").convert_alpha()
+    player_walk3 = pygame.image.load("artefakty_pygame/Tomek3.png").convert_alpha()
+    player_walk4 = pygame.image.load("artefakty_pygame/Tomek4.png").convert_alpha()
     
 
     player_idle1 = pygame.transform.scale(player_idle1, (200, 200))
@@ -463,6 +463,11 @@ def gra():
     while True:
         keys = pygame.key.get_pressed()
         lista = [keys[pygame.K_w],keys[pygame.K_UP],keys[pygame.K_s],keys[pygame.K_DOWN],keys[pygame.K_a],keys[pygame.K_RIGHT],keys[pygame.K_d],keys[pygame.K_LEFT]]
+        if keys[pygame.K_LSHIFT]:
+                if stamina > 1:
+                    a = 4
+        if not keys[pygame.K_LSHIFT] or stamina <= 1:
+            a = 10
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -475,11 +480,7 @@ def gra():
                 player = player_idle2
         if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             y += speed
-            if keys[pygame.K_LSHIFT]:
-                if stamina > 1:
-                    a = 4
-            if not keys[pygame.K_LSHIFT] or stamina <= 1:
-                a = 10
+
             frame += 1
 
             if frame < a/2:
@@ -510,10 +511,10 @@ def gra():
         for i in range(len(lista)):
             if keys[pygame.K_LSHIFT] and stamina > 0 and lista[i]:
                 speed = 8
-                stamina -= 1
+                stamina -= 0.05
             if (not keys[pygame.K_LSHIFT] or stamina <= 0):
                 speed = 3
-                stamina += 1
+                stamina += 0.01
         if stamina > 100:
             stamina = 100
         elif stamina <= -1:
@@ -527,5 +528,4 @@ def gra():
         pygame.draw.rect(screen, (0, 0, 255), (10, 50, 2 * stamina, 20))
         pygame.display.update()
         clock.tick(60)
-        print(stamina)
 gra()
