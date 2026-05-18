@@ -100,7 +100,7 @@ wróżki(Elf z cichą duszą):
     postacie:
         Korlian:
             rola postaci:
-                kolega Elenor i przyszły małżonek jej
+                kolega Elenor i przyszły jej małżonek
             fabuła postaci:
                 4.06.532r.n.e.: zamiana w wróżkę przez cisacha w świątyni wróżek i w tym samym czasie dowiedzenie się że wróżki nie są takie wolne jak myślał.
                 tam była wojna domowa między tymi co chcieli ziemie i tymi co byli neutralni. codziennie były wojny i on musiał walczyć.
