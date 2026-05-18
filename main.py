@@ -420,6 +420,15 @@ pos6 = Postać(
     daj_bron("włócznia"),
     False, True
 )
+pos7 = Postać(
+    "Goblin", "Azyl",
+    400.0, 500.0, 100.0, 100.0, 150.0, 25.0, 25.0, 350.0, 350.0,
+    200.0, 300.0, 50.0, 100,
+    0.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
+    daj_zbroje("brak_zbroi"),
+    daj_bron("brak_broni"),
+    False, False
+)
 pos1.dodaj_relacje(pos3.imie, {"zaufanie": 20, "atak": 0, "decyzje": []})
 pos1.dodaj_relacje("gracz", {"zaufanie": 0, "decyzje": []})
 pos1.synchronizacja(1)

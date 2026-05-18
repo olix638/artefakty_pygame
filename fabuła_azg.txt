@@ -16,8 +16,8 @@ bogowie:
 gobliny(ogień z ciałem):
     gobliny mają dziwną kulturę która wywodzi się z tego że są nie mają sensu życia i dlatego chcą umrzeć, bo oni nie mogą wytrzymać 
     tego że nie mogą się spełnić.
-    żyją 10000 lat. czczą ifgahuta, by on ich zabił i byli uwalnieni z klątwy. 0,05%(to gobliny z duchem kreatywności czyli 
-    cykliści w tym świecie) mają sensu życia, a 99,05% nie widzi sensu.
+    żyją 10000 lat. czczą ifgahuta, by on ich zabił i byli uwalnieni z klątwy. 10%(to gobliny z duchem kreatywności czyli 
+    cykliści w tym świecie i reszta goblinów wyleczonych przez cyklystów, a razem ich jest 2104) mają sensu życia, a 90% nie widzi sensu.
     każda część ducha kreatywności daje innaczej zmieniającyorganizm,
     ale zawsze daje możliwość magii ognia, a o to jak zmienia organizm:
     1.rzadziej chce pić
@@ -27,8 +27,15 @@ gobliny(ogień z ciałem):
       może tkać ziemie,ogień,metal,magme i popiół
     3.ma lepszą obronę bo bardziejma twartszą skure(+ 200 obrony). może tkać ogień
     4.musi swego ognia się uczyć, bo ma ogon, ale jak się nauczy to ma najpoteżniejszy ogień z wszystkich goblinów
-    (w pierwszej części jest to buzg)
+      (w pierwszej części jest to buzg)
     5.zna się na duchowości od urodzenia, więc też wie że to jest tylko gra i ten świat to fikcja. może tkać ogień
+    jak powstały i jak powstają:
+        Gobliny są ogniem z iskrą, ale nie mają sensu.
+        powstały z ognia, ale ich skóra i mięśnie nie są zrobione z ognia, ale z metalu.
+        wszystkie mięśnie goblinów, oprócz serca są zrobione z metalu, ale reszta narządów są najbardziej ludzkie z prawdziwego świata.
+        rodzą się tak samo jak ludzie z prawdziwego czyli tam gdzie jestem ja i reszta ludzkości.
+        jedynymi narządami, które zawierają ogień jest żołądek, jelito ciękie i jelito grube.
+        Gobliny powstały tak że skóre zrobił z metalu, bo chciał mieć najbardziej wytrwały lud na całym świecie, który stworzyłem, ale goider zrobił klątwe, która każe tym jednostom szukać sensu, którego nigdy nie znajdą, więc Galaktus stworzył cyklistów, by ten sens tworzyli, bo bogowie nie chcieli za bardzo ingerować w świat materialny(pod manipulacją Goidera).
 elfy(para wodna z ciałem):
     żyją 10000 lat i nic się nie zmienia, ale nie są tacy sami, ani podobni. też mają problem bo są pod reżimem i niewiedzą że w ogóle są pod reżimem. czczą
     manreda. jedzą liście, bo są roślinożercami i nie mają odwodnienia,
