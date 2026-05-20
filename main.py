@@ -65,7 +65,9 @@ def daj_zbroje(nazwa):
 def daj_bron(nazwa):
     return stworz_przedmiot(bronie_def[nazwa])
 class Postać:
-    def __init__(self, istota, imie, głowa, klatka, lręka, pręka, brzuch, lrzebro, przebro, lnoga, pnoga, napojenie,mnapojenie, głód, mgłód, atak, obrona, zbroja, broń,chce_zatakować,musi):
+    żywi = []
+    polegli = []
+    def __init__(self, istota, imie, głowa, klatka, lręka, pręka, brzuch, lrzebro, przebro, lnoga, pnoga, napojenie,mnapojenie, głód, mgłód, atak, obrona, zbroja, broń,chce_zatakować,musi,x,y,szybkość,szybkość_ataku):
         self.imie = imie
         self.głód = głód
         self.mgłód = mgłód
@@ -105,7 +107,13 @@ class Postać:
         # Do obsługi działania artefaktów
         self.wochuk_uses = {}  # przeciwnik: ile razy użyto
         self.cozwoj_uses = 0
-    def wczytaj(self,wimie,wgłód,wmgłód,wnapojenie,wmnapojenie,wistota,wgłowa,wklatka,wlręka,wpręka,wbrzuch,wlrzebro,wprzebro,wlnoga,wpnoga,wartefakty,wza_atak,wza_obrona,watak,wobrona,wzbroja,wbronie,wumiejętności,wciało,wnczęści_ciała,wczęści_ciała,wogłuszony,wczas_ogłuszenia,wchce,wmusi,wtury,wdrużyna,wwrogowie,wekwipunek,woszczędzenie,wrelacje,wwochuk_uses,wcozwoj_uses):
+
+        self.x = x
+        self.y = y
+        self.szybkość = szybkość
+        self.szybkość_ataku = szybkość_ataku
+        self.żywi.append(self)
+    def wczytaj(self,wimie,wgłód,wmgłód,wnapojenie,wmnapojenie,wistota,wgłowa,wklatka,wlręka,wpręka,wbrzuch,wlrzebro,wprzebro,wlnoga,wpnoga,wartefakty,wza_atak,wza_obrona,watak,wobrona,wzbroja,wbronie,wumiejętności,wciało,wnczęści_ciała,wczęści_ciała,wogłuszony,wczas_ogłuszenia,wchce,wmusi,wtury,wdrużyna,wwrogowie,wekwipunek,woszczędzenie,wrelacje,wwochuk_uses,wcozwoj_uses,wx,wy,wplansza):
         self.imie = wimie
         self.głód = wgłód
         self.mgłód = wmgłód
@@ -144,6 +152,9 @@ class Postać:
         self.relacje = wrelacje
         self.wochuk_uses = wwochuk_uses
         self.cozwoj_uses = wcozwoj_uses
+        self.x = wx
+        self.y = wy
+        self.plansza = wplansza
     def po(self):
         return {
             "imie": self.imie,
@@ -373,7 +384,9 @@ pos1 = Postać(
     10.0, {"głowa": 10, "klatka": 10, "lręka": 5, "pręka": 0, "brzuch": 10, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
     daj_zbroje("zbroja_z_błota_i_liści"),
     daj_bron("cięki_patyk"),
-    True, False
+    True, False,
+    100, 100,
+    3,7
 )
 pos2 = Postać(
     "goblin", "Buzg",
@@ -382,7 +395,9 @@ pos2 = Postać(
     0.0, {"głowa": 100, "klatka": 200, "lręka": 150, "pręka": 150, "brzuch": 200, "lrzebro": 50, "przebro": 50, "lnoga": 300, "pnoga": 300, "ogon": 500},
     daj_zbroje("brak_zbroi"),
     daj_bron("topur"),
-    False, True
+    False, True,
+    0,0,
+    1,4
 )
 pos3 = Postać(
     "elf", "Elenor",
@@ -391,7 +406,9 @@ pos3 = Postać(
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
     daj_zbroje("brak_zbroi"),
     daj_bron("brak_broni"),
-    False, False
+    False, False,
+    0,0,
+    8,7
 )
 pos4 = Postać(
     "elf", "Romeo",
@@ -400,7 +417,9 @@ pos4 = Postać(
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
     daj_zbroje("czarno_zbroja"),
     daj_bron("łuk"),
-    True, False
+    True, False,
+    0,0,
+    2,3
 )
 pos5 = Postać(
     "elf", "Rukur",
@@ -409,7 +428,9 @@ pos5 = Postać(
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
     daj_zbroje("metalowa_zbroja"),
     daj_bron("włócznia"),
-    False, True
+    False, True,
+    0,0,
+    7,8
 )
 pos6 = Postać(
     "elf", "Rokil",
@@ -418,7 +439,9 @@ pos6 = Postać(
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
     daj_zbroje("metalowa_zbroja"),
     daj_bron("włócznia"),
-    False, True
+    False, True,
+    0,0,
+    7,8
 )
 pos7 = Postać(
     "Goblin", "Azyl",
@@ -427,7 +450,9 @@ pos7 = Postać(
     0.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
     daj_zbroje("brak_zbroi"),
     daj_bron("brak_broni"),
-    False, False
+    False, False,
+    0,0,
+    7,8
 )
 pos1.dodaj_relacje(pos3.imie, {"zaufanie": 20, "atak": 0, "decyzje": []})
 pos1.dodaj_relacje("gracz", {"zaufanie": 0, "decyzje": []})
@@ -446,30 +471,47 @@ pos5.synchronizacja(1)
 pos6.synchronizacja(1)
 def gra():
     pygame.init()
+    pygame.display.set_caption("Artefakty")
     screen = pygame.display.set_mode((800, 600))
     clock = pygame.time.Clock()
-    x = 100
-    y = 100
+
+    # ładowanie tła
+    tlo = pygame.image.load("artefakty_pygame/tlo.png").convert()
+    tlo = pygame.transform.scale(tlo, (800, 600))
     speed = 3  # pixel po pixelu
     stamina = 100.0
     frame = 0
     player_idle1 = pygame.image.load("artefakty_pygame/Tomek.png").convert_alpha()
     player_idle2 = pygame.image.load("artefakty_pygame/Tomek5.png").convert_alpha()
+    player_idle3 = pygame.image.load("artefakty_pygame/Tomek8.png").convert_alpha()
+    player_idle4 = pygame.image.load("artefakty_pygame/Tomek9.png").convert_alpha()
     player_walk1 = pygame.image.load("artefakty_pygame/Tomek1.png").convert_alpha()
     player_walk2 = pygame.image.load("artefakty_pygame/Tomek2.png").convert_alpha()
     player_walk3 = pygame.image.load("artefakty_pygame/Tomek3.png").convert_alpha()
     player_walk4 = pygame.image.load("artefakty_pygame/Tomek4.png").convert_alpha()
+    player_walk5 = pygame.image.load("artefakty_pygame/Tomek6.png").convert_alpha()
+    player_walk6 = pygame.image.load("artefakty_pygame/Tomek7.png").convert_alpha()
+    player_walk7 = pygame.image.load("artefakty_pygame/Tomek10.png").convert_alpha()
+    player_walk8 = pygame.image.load("artefakty_pygame/Tomek11.png").convert_alpha()
     
 
     player_idle1 = pygame.transform.scale(player_idle1, (200, 200))
     player_idle2 = pygame.transform.scale(player_idle2, (200, 200))
+    player_idle3 = pygame.transform.scale(player_idle3, (200, 200))
+    player_idle4 = pygame.transform.scale(player_idle4, (200, 200))
     player_walk1 = pygame.transform.scale(player_walk1, (200, 200))
     player_walk2 = pygame.transform.scale(player_walk2, (200, 200))
     player_walk3 = pygame.transform.scale(player_walk3, (200, 200))
     player_walk4 = pygame.transform.scale(player_walk4, (200, 200))
+    player_walk5 = pygame.transform.scale(player_walk5, (200, 200))
+    player_walk6 = pygame.transform.scale(player_walk6, (200, 200))
+    player_walk7 = pygame.transform.scale(player_walk7, (200, 200))
+    player_walk8 = pygame.transform.scale(player_walk8, (200, 200))
     font = pygame.font.SysFont(None, 36)
     player = player_idle1
     while True:
+        camera_x = pos1.x - 280
+        camera_y = pos1.y - 220
         keys = pygame.key.get_pressed()
         lista = [keys[pygame.K_w],keys[pygame.K_UP],keys[pygame.K_s],keys[pygame.K_DOWN],keys[pygame.K_a],keys[pygame.K_RIGHT],keys[pygame.K_d],keys[pygame.K_LEFT]]
         if keys[pygame.K_LSHIFT]:
@@ -487,8 +529,12 @@ def gra():
                 player = player_idle1
             elif player in [player_walk3, player_walk4]:
                 player = player_idle2
+            elif player in [player_walk5, player_walk6]:
+                player = player_idle3
+            elif player in [player_walk7, player_walk8]:
+                player = player_idle4
         if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-            y += speed
+            pos1.y += speed
 
             frame += 1
 
@@ -499,7 +545,7 @@ def gra():
             if frame >= a:
                 frame = 0
         elif keys[pygame.K_w] or keys[pygame.K_UP]:
-            y -= speed
+            pos1.y -= speed
 
             frame += 1
 
@@ -511,25 +557,49 @@ def gra():
                 player = player_walk3
                 frame = 0
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-            x -= speed
+            pos1.x -= speed
+            frame += 1
+            if frame < a*2:
+                player = player_walk7
+            if frame > a*2:
+                player = player_walk8
+            if frame >= a*4:
+                player = player_walk7
+                frame = 0
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            x += speed
+            pos1.x += speed
+            frame += 1
+            if frame < a*2:
+                player = player_walk5
+            if frame > a*2:
+                player = player_walk6
+            if frame >= a*4:
+                player = player_walk5
+                frame = 0
         if keys[pygame.K_q]:
             pygame.quit()
             exit()
         for i in range(len(lista)):
             if keys[pygame.K_LSHIFT] and stamina > 0 and lista[i]:
-                speed = 8
+                speed = pos1.szybkość*(8/3)
                 stamina -= 0.05
             if (not keys[pygame.K_LSHIFT] or stamina <= 0):
-                speed = 3
-                stamina += 0.01
+                speed = pos1.szybkość
+                stamina += 0.0001
         if stamina > 100:
             stamina = 100
         elif stamina <= -1:
             stamina = -1
-        screen.fill((0, 255, 0))
-        screen.blit(player, (x, y))
+        # czarne tło mapy
+        screen.fill((0, 0, 0))
+
+        # pozycja jednego tła na mapie
+        tlo_x = -180
+        tlo_y = -120
+
+        # rysowanie jednego tła
+        screen.blit(tlo, (tlo_x - camera_x, tlo_y - camera_y))
+        screen.blit(player, (pos1.x - camera_x, pos1.y - camera_y))
         # tło paska
         pygame.draw.rect(screen,(100, 100, 100), (10, 50, 200, 20))
 
