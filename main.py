@@ -493,6 +493,29 @@ pos3.dodaj_relacje(pos1.imie, {"zaufanie": 20, "atak": 0, "decyzje": []})
 pos4.synchronizacja(1)
 pos5.synchronizacja(1)
 pos6.synchronizacja(1)
+def zamien_czas(sekundy):
+    rok = 365 * 24 * 60 * 60
+    miesiac = 30 * 24 * 60 * 60
+    dzien = 24 * 60 * 60
+    godzina = 60 * 60
+    minuta = 60
+
+    lata = sekundy // rok
+    sekundy %= rok
+
+    miesiace = sekundy // miesiac
+    sekundy %= miesiac
+
+    dni = sekundy // dzien
+    sekundy %= dzien
+
+    godziny = sekundy // godzina
+    sekundy %= godzina
+
+    minuty = sekundy // minuta
+    sekundy %= minuta
+
+    return lata, miesiace, dni, godziny, minuty, sekundy
 def gra():
     pygame.init()
     pygame.display.set_caption("Artefakty")
@@ -533,34 +556,59 @@ def gra():
     player_walk8 = pygame.transform.scale(player_walk8, (200, 200))
     font = pygame.font.SysFont(None, 36)
     player = player_idle1
+    czas_w_sekundach = 12299229216000
+
+    # licznik czasu
+    ostatnia_aktualizacja = time.time()
+
+    lata, miesiace, dni, godziny, minuty, sekundy = zamien_czas(czas_w_sekundach)
     while True:
+        a = 10  # domyślna szybkość animacji
+        aktualny_czas = time.time()
+
+        # aktualizacja co 60 sekund realnego czasu
+        if aktualny_czas - ostatnia_aktualizacja >= 1:
+            czas_w_sekundach += 1
+            ostatnia_aktualizacja = aktualny_czas
+
+            lata, miesiace, dni, godziny, minuty, sekundy = zamien_czas(czas_w_sekundach)
         camera_x = pos1.x - 280
         camera_y = pos1.y - 220
         keys = pygame.key.get_pressed()
-        lista = [keys[pygame.K_w],keys[pygame.K_UP],keys[pygame.K_s],keys[pygame.K_DOWN],keys[pygame.K_a],keys[pygame.K_RIGHT],keys[pygame.K_d],keys[pygame.K_LEFT]]
-        if keys[pygame.K_LSHIFT]:
-                if stamina > 1:
-                    a = 4
-        if not keys[pygame.K_LSHIFT] or stamina <= 1:
-            a = 10
+
+        lista = [
+            keys[pygame.K_w],
+            keys[pygame.K_UP],
+            keys[pygame.K_s],
+            keys[pygame.K_DOWN],
+            keys[pygame.K_a],
+            keys[pygame.K_RIGHT],
+            keys[pygame.K_d],
+            keys[pygame.K_LEFT]
+        ]
+        moving = any(lista)
+
+        if moving:
+            frame += 1
+        if keys[pygame.K_LSHIFT] and stamina > 1:
+            a = 4
         b = a*2
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-        if not any(lista):
+        if not moving:
             frame = 0
             if player in [player_walk1, player_walk2]:
                 player = player_idle1
-            elif player in [player_walk3, player_walk4]:
+            if player in [player_walk3, player_walk4]:
                 player = player_idle2
-            elif player in [player_walk5, player_walk6]:
+            if player in [player_walk5, player_walk6]:
                 player = player_idle3
-            elif player in [player_walk7, player_walk8]:
+            if player in [player_walk7, player_walk8]:
                 player = player_idle4
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             pos1.x -= speed
-            frame += 1
             if frame <= b/4:
                 player = player_walk7
             if frame > b/4 and frame < b/2:
@@ -572,7 +620,6 @@ def gra():
                 frame = 0
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             pos1.x += speed
-            frame += 1
             if frame <= b/5:
                 player = player_walk5
             if frame > b/5 and frame < b/2:
@@ -585,8 +632,6 @@ def gra():
         if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             pos1.y += speed
 
-            frame += 1
-
             if frame < a/2:
                 player = player_walk1
             if frame > a/2:
@@ -595,8 +640,6 @@ def gra():
                 frame = 0
         elif keys[pygame.K_w] or keys[pygame.K_UP]:
             pos1.y -= speed
-
-            frame += 1
 
             if frame < a/2:
                 player = player_walk3
@@ -608,13 +651,12 @@ def gra():
         if keys[pygame.K_q]:
             pygame.quit()
             exit()
-        for i in range(len(lista)):
-            if keys[pygame.K_LSHIFT] and stamina > 0 and lista[i]:
-                speed = pos1.szybkość*(8/3)
-                stamina -= 0.05
-            if (not keys[pygame.K_LSHIFT] or stamina <= 0):
-                speed = pos1.szybkość
-                stamina += 0.0001
+        if keys[pygame.K_LSHIFT] and stamina > 0 and any(lista):
+            speed = pos1.szybkość*(8/3)
+            stamina -= 0.05
+        if (not keys[pygame.K_LSHIFT] or stamina <= 0):
+            speed = pos1.szybkość
+            stamina += 0.0001
         if stamina > 100:
             stamina = 100
         elif stamina <= -1:
@@ -625,12 +667,14 @@ def gra():
         # pozycja jednego tła na mapie
         tlo_x = -180
         tlo_y = -120
-
         # rysowanie jednego tła
         screen.blit(tlo, (tlo_x - camera_x, tlo_y - camera_y))
         screen.blit(player, (pos1.x - camera_x, pos1.y - camera_y))
-        # tło paska
+        
         pygame.draw.rect(screen,(100, 100, 100), (10, 50, 200, 20))
+
+        tekst_czas = font.render(f"czas: {lata}l {miesiace}m {dni}d {godziny}g {minuty}min {sekundy}s", True, (255, 255, 255))
+        screen.blit(tekst_czas, (10, 10))
 
         # aktualna stamina
         pygame.draw.rect(screen, (0, 0, 255), (10, 50, 2 * stamina, 20))
