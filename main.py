@@ -1,3 +1,4 @@
+#ma być 21040 Goblinów, 754 wróżek, 27504 ludzi i 25357 elfów
 from random import *
 import json
 import os
@@ -65,6 +66,10 @@ def daj_zbroje(nazwa):
 def daj_bron(nazwa):
     return stworz_przedmiot(bronie_def[nazwa])
 class Postać:
+    wróżki = 0
+    ludzie = 0
+    elfy = 0
+    Gobliny = 0
     żywi = []
     polegli = []
     def __init__(self, istota, imie, głowa, klatka, lręka, pręka, brzuch, lrzebro, przebro, lnoga, pnoga, napojenie,mnapojenie, głód, mgłód, atak, obrona, zbroja, broń,chce_zatakować,musi,x,y,szybkość,szybkość_ataku):
@@ -113,6 +118,14 @@ class Postać:
         self.szybkość = szybkość
         self.szybkość_ataku = szybkość_ataku
         self.żywi.append(self)
+        if istota == "wróżka":
+            Postać.wróżki += 1
+        elif istota == "człowiek":
+            Postać.ludzie += 1
+        elif istota == "elf":
+            Postać.elfy += 1
+        elif istota == "Goblin":
+            Postać.Gobliny += 1
     def wczytaj(self,wimie,wgłód,wmgłód,wnapojenie,wmnapojenie,wistota,wgłowa,wklatka,wlręka,wpręka,wbrzuch,wlrzebro,wprzebro,wlnoga,wpnoga,wartefakty,wza_atak,wza_obrona,watak,wobrona,wzbroja,wbronie,wumiejętności,wciało,wnczęści_ciała,wczęści_ciała,wogłuszony,wczas_ogłuszenia,wchce,wmusi,wtury,wdrużyna,wwrogowie,wekwipunek,woszczędzenie,wrelacje,wwochuk_uses,wcozwoj_uses,wx,wy,wplansza):
         self.imie = wimie
         self.głód = wgłód
@@ -389,7 +402,7 @@ pos1 = Postać(
     3,7
 )
 pos2 = Postać(
-    "goblin", "Buzg",
+    "Goblin", "Buzg",
     200000.0, 250000.0, 44800.0, 50000.0, 75000.0, 12500.0, 12500.0, 175000.0, 175000.0,
     200.0, 300.0, 50.0, 100,
     0.0, {"głowa": 100, "klatka": 200, "lręka": 150, "pręka": 150, "brzuch": 200, "lrzebro": 50, "przebro": 50, "lnoga": 300, "pnoga": 300, "ogon": 500},
@@ -446,6 +459,17 @@ pos6 = Postać(
 pos7 = Postać(
     "Goblin", "Azyl",
     400.0, 500.0, 100.0, 100.0, 150.0, 25.0, 25.0, 350.0, 350.0,
+    200.0, 300.0, 50.0, 100,
+    0.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
+    daj_zbroje("brak_zbroi"),
+    daj_bron("brak_broni"),
+    False, False,
+    0,0,
+    7,8
+)
+pos8 = Postać(
+    "Goblin", "Zazul",
+    200000.0, 250000.0, 44800.0, 50000.0, 75000.0, 12500.0, 12500.0, 175000.0, 175000.0,
     200.0, 300.0, 50.0, 100,
     0.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
     daj_zbroje("brak_zbroi"),
@@ -519,6 +543,7 @@ def gra():
                     a = 4
         if not keys[pygame.K_LSHIFT] or stamina <= 1:
             a = 10
+        b = a*2
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -533,6 +558,30 @@ def gra():
                 player = player_idle3
             elif player in [player_walk7, player_walk8]:
                 player = player_idle4
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
+            pos1.x -= speed
+            frame += 1
+            if frame <= b/4:
+                player = player_walk7
+            if frame > b/4 and frame < b/2:
+                player = player_idle4
+            if frame >= b/2 and frame < b:
+                player = player_walk8
+            if frame >= b:
+                player = player_walk7
+                frame = 0
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+            pos1.x += speed
+            frame += 1
+            if frame <= b/5:
+                player = player_walk5
+            if frame > b/5 and frame < b/2:
+                player = player_idle3
+            if frame >= b/2 and frame < b:
+                player = player_walk6
+            elif frame >= b:
+                player = player_walk5
+                frame = 0
         if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             pos1.y += speed
 
@@ -555,26 +604,6 @@ def gra():
                 player = player_walk4
             if frame >= a:
                 player = player_walk3
-                frame = 0
-        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-            pos1.x -= speed
-            frame += 1
-            if frame < a*2:
-                player = player_walk7
-            if frame > a*2:
-                player = player_walk8
-            if frame >= a*4:
-                player = player_walk7
-                frame = 0
-        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            pos1.x += speed
-            frame += 1
-            if frame < a*2:
-                player = player_walk5
-            if frame > a*2:
-                player = player_walk6
-            if frame >= a*4:
-                player = player_walk5
                 frame = 0
         if keys[pygame.K_q]:
             pygame.quit()
