@@ -4,6 +4,17 @@ import json
 import os
 import pygame
 import time
+class Walka:
+    def __init__(self, postać1, postać2):
+        self.postać1 = postać1
+        self.postać2 = postać2
+        self.tura = 0
+        self.log_walki = []
+    def komunikat(self, tekst):
+        self.log_walki.append(tekst)
+        
+        if len(self.log_walki) > 6:
+            self.log_walki.pop(0)
 def usuń_plik(plik):
     try:
         os.remove(plik)
@@ -72,7 +83,7 @@ class Postać:
     Gobliny = 0
     żywi = []
     polegli = []
-    def __init__(self, istota, imie, głowa, klatka, lręka, pręka, brzuch, lrzebro, przebro, lnoga, pnoga, napojenie,mnapojenie, głód, mgłód, atak, obrona, zbroja, broń,chce_zatakować,musi,x,y,szybkość,szybkość_ataku):
+    def __init__(self, istota, imie, głowa, klatka, lręka, pręka, brzuch, lrzebro, przebro, lnoga, pnoga, napojenie,mnapojenie, głód, mgłód, atak, obrona, zbroja, broń,chce_zatakować,musi,x,y,szybkość,szybkość_ataku,hitbox_w, hitbox_h, offset_x, offset_y):
         self.imie = imie
         self.głód = głód
         self.mgłód = mgłód
@@ -112,12 +123,22 @@ class Postać:
         # Do obsługi działania artefaktów
         self.wochuk_uses = {}  # przeciwnik: ile razy użyto
         self.cozwoj_uses = 0
-
+        # ... (Twój dotychczasowy kod w __init__) ...
         self.x = x
         self.y = y
         self.szybkość = szybkość
         self.szybkość_ataku = szybkość_ataku
-        self.żywi.append(self)
+        
+        # --- TUTAJ DOPISZ PARAMETRY HITBOXU ---
+        self.hitbox_w = hitbox_w
+        self.hitbox_h = hitbox_h
+        self.offset_x = offset_x
+        self.offset_y = offset_y
+        # Tworzymy właściwy obiekt prostokąta Pygame
+        self.hitbox = pygame.Rect(self.x + self.offset_x, self.y + self.offset_y, self.hitbox_w, self.hitbox_h)
+        # --------------------------------------
+
+        Postać.żywi.append(self)
         if istota == "wróżka":
             Postać.wróżki += 1
         elif istota == "człowiek":
@@ -209,6 +230,9 @@ class Postać:
             "wochuk_uses": self.wochuk_uses,
             "cozwoj_uses": self.cozwoj_uses
         }
+    def aktualizuj_hitbox(self):
+        self.hitbox.x = self.x + self.offset_x
+        self.hitbox.y = self.y + self.offset_y
     def napraw_zbroje(self,ilość: int):
         if self.zbroja is None or self.zbroja.wytrzymałość == 0:
             print(f"{self.imie} nie ma zbroi do naprawy.")
@@ -309,26 +333,28 @@ class Postać:
             p1.drużyna.append(p3)
         if p2 not in p1.drużyna:
             p1.drużyna.append(p2)
-    def zaatakuj(self, wrog, jaka_czesc: str):
+    def zaatakuj(self, wrog, jaka_czesc: str, walka: Walka):
         obrona_czesci = wrog.obrona[jaka_czesc]
         if self.chce or self.musi:
             if wrog in self.drużyna:
-                print("chcesz zatakować swojego? co jest z tabą nie tak")
+                walka.komunikat("chcesz zatakować swojego? co jest z tabą nie tak")
                 return
             elif self.broń.tury > 0:
                 self.broń.tury -= 1
                 return
             elif self.broń.wytrzymałość == 0:
-                print(f"{self.imie} nie może zaatakować, bo {self.bronie.nazwa} jest stępiona!")
+                walka.komunikat(f"{self.imie} nie może zaatakować, bo {self.bronie.nazwa} jest stępiona!")
                 return
             elif jaka_czesc == "głowa" and randint(1, 100) != 1:
-                print(f"{self.imie} chybił atak w głowę {wrog.imie}!")
+                walka.komunikat(f"{self.imie} chybił atak w głowę {wrog.imie}!")
                 return
             elif wrog.istota == "goblin" and jaka_czesc == "głowa" and randint(1, 1000) != 1:
-                print(f"{self.imie} chybił atak w głowę goblina o imieniu {wrog.imie}!")
+                walka.komunikat(f"{self.imie} chybił atak w głowę goblina o imieniu {wrog.imie}!")
                 return
             elif self.broń.nazwa in ["włócznia", "ostra włócznia"]:
                 for i in range(3):
+                    if randint(1, wrog.szybkość) < self.szybkość_ataku:
+                        walka.komunikat(f"{self.imie} uniknął ataku {wrog.imie}!")
                     obrazenia = max(0, randint(int(self.atak - (self.atak*0.1)), int(self.atak)) - obrona_czesci)
                     obrażenia_obrony = obrona_czesci*0.1
                     self.obrona[jaka_czesc] = max(0, self.obrona[jaka_czesc] - obrażenia_obrony)
@@ -337,12 +363,12 @@ class Postać:
                     setattr(wrog, jaka_czesc, nowe_hp)
                     rzeczywiste_obrazenia = aktualne_hp - nowe_hp
                     wrog.ciało = max(0, wrog.ciało - rzeczywiste_obrazenia)
-                    print(f"{wrog.imie} dostał {rzeczywiste_obrazenia} obrażeń w {jaka_czesc}!")
-                    print(f"{wrog.imie} ma {nowe_hp} HP w {jaka_czesc}")
+                    walka.komunikat(f"{wrog.imie} dostał {rzeczywiste_obrazenia} obrażeń w {jaka_czesc}!")
+                    walka.komunikat(f"{wrog.imie} ma {nowe_hp} HP w {jaka_czesc}")
                 if not self.broń.wytrzymałość == 0:
                     self.broń.wytrzymałość = max(0,self.broń.wytrzymałość - 1)
                 if self.broń.wytrzymałość == 0:
-                    print(f"{self.imie} nie może zaatakować, ponieważ {self.broń.nazwa} jest stępiona!")
+                    walka.komunikat(f"{self.imie} nie może zaatakować, ponieważ {self.broń.nazwa} jest stępiona!")
                     return
             else:
                 obrazenia = max(0, randint(int(self.atak - (self.atak * 0.1)), int(self.atak)) - obrona_czesci)
@@ -353,13 +379,13 @@ class Postać:
                 setattr(wrog, jaka_czesc, nowe_hp)
                 rzeczywiste_obrazenia = aktualne_hp - nowe_hp
                 wrog.ciało = max(0, wrog.ciało - rzeczywiste_obrazenia)
-                print(f"{wrog.imie} dostał {rzeczywiste_obrazenia} obrażeń w {jaka_czesc}!")
-                print(f"{wrog.imie} ma {nowe_hp} HP w {jaka_czesc}")
+                walka.komunikat(f"{wrog.imie} dostał {rzeczywiste_obrazenia} obrażeń w {jaka_czesc}!")
+                walka.komunikat(f"{wrog.imie} ma {nowe_hp} HP w {jaka_czesc}")
             if not self.broń.wytrzymałość == 0:
                 self.broń.wytrzymałość = max(0,self.broń.wytrzymałość - 1)
         else:
             if not self.chce:
-                print("nie chcę atakować")
+                walka.komunikat("nie chcę atakować")
     def zyje(self):
         return self.ciało > 0 or self.głowa > 0
     def dodaj_artefakt(self, nazwa, wymuszony_slot):
@@ -389,7 +415,7 @@ class Postać:
         przeciwnik.umiejętności = []
         return f"{przeciwnik.imie} został cofnięty do epoki kamienia łupanego!"
     def __str__(self):
-        return f"{self.imie}({self.istota}):\n  Życie={self.ciało}\n  Atak={self.atak}\n  Obrona={self.obrona}\n  punkty oszczędzienia = {self.oszczędzenie}\n  broń: {self.bronie.nazwa}\n  zbroja: {self.zbroja.nazwa}"
+        return f"{self.imie}({self.istota}):\n  Życie={self.ciało}\n  Atak={self.atak}\n  Obrona={self.obrona}\n  punkty oszczędzienia = {self.oszczędzenie}\n  broń: {self.broń.nazwa}\n  zbroja: {self.zbroja.nazwa}"
 pos1 = Postać(
     "człowiek", "Tomek",
     200.0, 250.0, 50.0, 10.0, 75.0, 12.5, 12.5, 175.0, 175.0,
@@ -398,8 +424,9 @@ pos1 = Postać(
     daj_zbroje("zbroja_z_błota_i_liści"),
     daj_bron("cięki_patyk"),
     True, False,
-    100, 100,
-    3,7
+    0, 0,
+    3,7,
+    50, 50, -25, -25
 )
 pos2 = Postać(
     "Goblin", "Buzg",
@@ -410,7 +437,8 @@ pos2 = Postać(
     daj_bron("topur"),
     False, True,
     0,0,
-    1,4
+    1,4,
+    100, 100, -50, -50
 )
 pos3 = Postać(
     "elf", "Elenor",
@@ -421,7 +449,8 @@ pos3 = Postać(
     daj_bron("brak_broni"),
     False, False,
     0,0,
-    8,7
+    8,7,
+    50, 50, -25, -25
 )
 pos4 = Postać(
     "elf", "Romeo",
@@ -432,7 +461,8 @@ pos4 = Postać(
     daj_bron("łuk"),
     True, False,
     0,0,
-    2,3
+    2,3,
+    50, 50, -25, -25
 )
 pos5 = Postać(
     "elf", "Rukur",
@@ -443,7 +473,8 @@ pos5 = Postać(
     daj_bron("włócznia"),
     False, True,
     0,0,
-    7,8
+    7,8,
+    50, 50, -25, -25
 )
 pos6 = Postać(
     "elf", "Rokil",
@@ -454,7 +485,8 @@ pos6 = Postać(
     daj_bron("włócznia"),
     False, True,
     0,0,
-    7,8
+    7,8,
+    50, 50, -25, -25
 )
 pos7 = Postać(
     "Goblin", "Azyl",
@@ -465,7 +497,8 @@ pos7 = Postać(
     daj_bron("brak_broni"),
     False, False,
     0,0,
-    7,8
+    7,8,
+    50, 50, -25, -25
 )
 pos8 = Postać(
     "Goblin", "Zazul",
@@ -476,7 +509,8 @@ pos8 = Postać(
     daj_bron("brak_broni"),
     False, False,
     0,0,
-    7,8
+    7,8,
+    50, 50, -25, -25
 )
 pos1.dodaj_relacje(pos3.imie, {"zaufanie": 20, "atak": 0, "decyzje": []})
 pos1.dodaj_relacje("gracz", {"zaufanie": 0, "decyzje": []})
@@ -524,6 +558,8 @@ def gra():
 
     # ładowanie tła
     tlo = pygame.image.load("artefakty_pygame/tlo.png").convert()
+    tlo1 = pygame.image.load("artefakty_pygame/tlo1.png").convert()
+    tlo1 = pygame.transform.scale(tlo1, (800, 600))
     tlo = pygame.transform.scale(tlo, (800, 600))
     speed = 3  # pixel po pixelu
     stamina = 100.0
@@ -556,26 +592,43 @@ def gra():
     player_walk8 = pygame.transform.scale(player_walk8, (200, 200))
     font = pygame.font.SysFont(None, 36)
     player = player_idle1
-    czas_w_sekundach = 12299229216000
 
     # licznik czasu
     ostatnia_aktualizacja = time.time()
 
-    lata, miesiace, dni, godziny, minuty, sekundy = zamien_czas(czas_w_sekundach)
+    lata = 390006
+    miesiace = 5
+    dni = 24
+    godziny = 17
+    minuty = 26
+    sekundy = 36
+
+    # Przeliczenie na sekundy (rok = 365 dni, miesiąc = 30 dni)
+    calkowite_sekundy = (
+        sekundy +
+        (minuty * 60) +
+        (godziny * 3600) +
+        (dni * 86400) +
+        (miesiace * 30 * 86400) +
+        (lata * 365 * 86400)
+    )
+
+    lata, miesiace, dni, godziny, minuty, sekundy = zamien_czas(calkowite_sekundy) # Wyświetli: 12301244312396
     while True:
         a = 10  # domyślna szybkość animacji
-        aktualny_czas = time.time()
+
+        # aktualizacja co 60 sekund realnego czasu
+        aktualny_czas = int(time.time())
 
         # aktualizacja co 60 sekund realnego czasu
         if aktualny_czas - ostatnia_aktualizacja >= 1:
-            czas_w_sekundach += 1
+            calkowite_sekundy += 1
             ostatnia_aktualizacja = aktualny_czas
 
-            lata, miesiace, dni, godziny, minuty, sekundy = zamien_czas(czas_w_sekundach)
+            lata, miesiace, dni, godziny, minuty, sekundy = zamien_czas(calkowite_sekundy)
         camera_x = pos1.x - 280
         camera_y = pos1.y - 220
         keys = pygame.key.get_pressed()
-
         lista = [
             keys[pygame.K_w],
             keys[pygame.K_UP],
@@ -609,6 +662,14 @@ def gra():
                 player = player_idle4
         if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             pos1.x -= speed
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+            pos1.x += speed
+        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
+            pos1.y += speed
+        if keys[pygame.K_w] or keys[pygame.K_UP]:
+            pos1.y -= speed
+        pos1.aktualizuj_hitbox()
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             if frame <= b/4:
                 player = player_walk7
             if frame > b/4 and frame < b/2:
@@ -618,8 +679,14 @@ def gra():
             if frame >= b:
                 player = player_walk7
                 frame = 0
+        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
+            if frame < a/2:
+             player = player_walk1
+            if frame > a/2:
+                player = player_walk2
+            if frame >= a:
+                frame = 0        
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            pos1.x += speed
             if frame <= b/5:
                 player = player_walk5
             if frame > b/5 and frame < b/2:
@@ -629,18 +696,8 @@ def gra():
             elif frame >= b:
                 player = player_walk5
                 frame = 0
-        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-            pos1.y += speed
-
-            if frame < a/2:
-                player = player_walk1
-            if frame > a/2:
-                player = player_walk2
-            if frame >= a:
-                frame = 0
+        
         elif keys[pygame.K_w] or keys[pygame.K_UP]:
-            pos1.y -= speed
-
             if frame < a/2:
                 player = player_walk3
             if frame > a/2:
@@ -652,7 +709,7 @@ def gra():
             pygame.quit()
             exit()
         if keys[pygame.K_LSHIFT] and stamina > 0 and any(lista):
-            speed = pos1.szybkość*(8/3)
+            speed = pos1.szybkość+5            
             stamina -= 0.05
         if (not keys[pygame.K_LSHIFT] or stamina <= 0):
             speed = pos1.szybkość
@@ -665,15 +722,18 @@ def gra():
         screen.fill((0, 0, 0))
 
         # pozycja jednego tła na mapie
-        tlo_x = -180
-        tlo_y = -120
+        tlo_x = -280
+        tlo_y = -220
+        tlo_x2 = tlo_x
+        tlo_y2 = tlo_y + 600
         # rysowanie jednego tła
         screen.blit(tlo, (tlo_x - camera_x, tlo_y - camera_y))
+        screen.blit(tlo1, (tlo_x2 - camera_x, tlo_y2 - camera_y))
         screen.blit(player, (pos1.x - camera_x, pos1.y - camera_y))
         
         pygame.draw.rect(screen,(100, 100, 100), (10, 50, 200, 20))
 
-        tekst_czas = font.render(f"czas: {lata}l {miesiace}m {dni}d {godziny}g {minuty}min {sekundy}s", True, (255, 255, 255))
+        tekst_czas = font.render(f"czas: {lata} l. {miesiace} mies. {dni} d. {godziny} godz. {minuty} min. {sekundy} sek.", True, (255, 255, 255))
         screen.blit(tekst_czas, (10, 10))
 
         # aktualna stamina
