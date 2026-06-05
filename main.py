@@ -557,25 +557,34 @@ def gra():
     clock = pygame.time.Clock()
 
     # ładowanie tła
-    tlo = pygame.image.load("artefakty_pygame/tlo.png").convert()
-    tlo1 = pygame.image.load("artefakty_pygame/tlo1.png").convert()
+    tlo = pygame.image.load("tlo.png").convert()
+    tlo1 = pygame.image.load("tlo1.png").convert()
+    tlo2 = pygame.image.load("tlo2.png").convert()
+    tlo3 = pygame.image.load("tlo3.png").convert()
+    tlo4 = pygame.image.load("tlo4.png").convert()
+    tlo5 = pygame.transform.rotate(tlo3, 180)
+    
     tlo1 = pygame.transform.scale(tlo1, (800, 600))
     tlo = pygame.transform.scale(tlo, (800, 600))
+    tlo2 = pygame.transform.scale(tlo2, (800, 600))
+    tlo3 = pygame.transform.scale(tlo3, (800, 600))
+    tlo4 = pygame.transform.scale(tlo4, (800, 600))
+    tlo5 = pygame.transform.scale(tlo5, (800, 600))
     speed = 3  # pixel po pixelu
     stamina = 100.0
     frame = 0
-    player_idle1 = pygame.image.load("artefakty_pygame/Tomek.png").convert_alpha()
-    player_idle2 = pygame.image.load("artefakty_pygame/Tomek5.png").convert_alpha()
-    player_idle3 = pygame.image.load("artefakty_pygame/Tomek8.png").convert_alpha()
-    player_idle4 = pygame.image.load("artefakty_pygame/Tomek9.png").convert_alpha()
-    player_walk1 = pygame.image.load("artefakty_pygame/Tomek1.png").convert_alpha()
-    player_walk2 = pygame.image.load("artefakty_pygame/Tomek2.png").convert_alpha()
-    player_walk3 = pygame.image.load("artefakty_pygame/Tomek3.png").convert_alpha()
-    player_walk4 = pygame.image.load("artefakty_pygame/Tomek4.png").convert_alpha()
-    player_walk5 = pygame.image.load("artefakty_pygame/Tomek6.png").convert_alpha()
-    player_walk6 = pygame.image.load("artefakty_pygame/Tomek7.png").convert_alpha()
-    player_walk7 = pygame.image.load("artefakty_pygame/Tomek10.png").convert_alpha()
-    player_walk8 = pygame.image.load("artefakty_pygame/Tomek11.png").convert_alpha()
+    player_idle1 = pygame.image.load("Tomek.png").convert_alpha()
+    player_idle2 = pygame.image.load("Tomek5.png").convert_alpha()
+    player_idle3 = pygame.image.load("Tomek8.png").convert_alpha()
+    player_idle4 = pygame.image.load("Tomek9.png").convert_alpha()
+    player_walk1 = pygame.image.load("Tomek1.png").convert_alpha()
+    player_walk2 = pygame.image.load("Tomek2.png").convert_alpha()
+    player_walk3 = pygame.image.load("Tomek3.png").convert_alpha()
+    player_walk4 = pygame.image.load("Tomek4.png").convert_alpha()
+    player_walk5 = pygame.image.load("Tomek6.png").convert_alpha()
+    player_walk6 = pygame.image.load("Tomek7.png").convert_alpha()
+    player_walk7 = pygame.image.load("Tomek10.png").convert_alpha()
+    player_walk8 = pygame.image.load("Tomek11.png").convert_alpha()
     
 
     player_idle1 = pygame.transform.scale(player_idle1, (200, 200))
@@ -668,8 +677,26 @@ def gra():
             pos1.y += speed
         if keys[pygame.K_w] or keys[pygame.K_UP]:
             pos1.y -= speed
+        else:
+            pass
         pos1.aktualizuj_hitbox()
-        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
+        
+        if keys[pygame.K_w] or keys[pygame.K_UP]:
+            if frame < a/2:
+                player = player_walk3
+            if frame > a/2:
+                player = player_walk4
+            if frame >= a:
+                player = player_walk3
+                frame = 0
+        elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
+            if frame < a/2:
+             player = player_walk1
+            if frame > a/2:
+                player = player_walk2
+            if frame >= a:
+                frame = 0
+        elif keys[pygame.K_a] or keys[pygame.K_LEFT]:
             if frame <= b/4:
                 player = player_walk7
             if frame > b/4 and frame < b/2:
@@ -678,15 +705,8 @@ def gra():
                 player = player_walk8
             if frame >= b:
                 player = player_walk7
-                frame = 0
-        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-            if frame < a/2:
-             player = player_walk1
-            if frame > a/2:
-                player = player_walk2
-            if frame >= a:
-                frame = 0        
-        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
+                frame = 0               
+        elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             if frame <= b/5:
                 player = player_walk5
             if frame > b/5 and frame < b/2:
@@ -696,24 +716,22 @@ def gra():
             elif frame >= b:
                 player = player_walk5
                 frame = 0
-        
-        elif keys[pygame.K_w] or keys[pygame.K_UP]:
-            if frame < a/2:
-                player = player_walk3
-            if frame > a/2:
-                player = player_walk4
-            if frame >= a:
-                player = player_walk3
-                frame = 0
+        else:
+            pass
+
         if keys[pygame.K_q]:
             pygame.quit()
             exit()
+        else:
+            pass
         if keys[pygame.K_LSHIFT] and stamina > 0 and any(lista):
             speed = pos1.szybkość+5            
             stamina -= 0.05
-        if (not keys[pygame.K_LSHIFT] or stamina <= 0):
+        elif (not keys[pygame.K_LSHIFT] or stamina <= 0):
             speed = pos1.szybkość
-            stamina += 0.0001
+            stamina += 0.001
+        else:
+            pass    
         if stamina > 100:
             stamina = 100
         elif stamina <= -1:
@@ -724,17 +742,30 @@ def gra():
         # pozycja jednego tła na mapie
         tlo_x = -280
         tlo_y = -220
-        tlo_x2 = tlo_x
-        tlo_y2 = tlo_y + 600
+        tlo_y1 = tlo_y + 600
+        tlo_y2 = tlo_y1 + 600
+        tlo_y3 = tlo_y2 + 600
+        tlo_y4 = tlo_y3 + 600
+        tlo_x1 = tlo_x + 800
+        tlo_x2 = tlo_x - 800
         # rysowanie jednego tła
         screen.blit(tlo, (tlo_x - camera_x, tlo_y - camera_y))
-        screen.blit(tlo1, (tlo_x2 - camera_x, tlo_y2 - camera_y))
+        screen.blit(tlo1, (tlo_x - camera_x, tlo_y1 - camera_y))
+        screen.blit(tlo3, (tlo_x - camera_x, tlo_y2 - camera_y))
+        screen.blit(tlo4, (tlo_x - camera_x, tlo_y3 - camera_y))
+        screen.blit(tlo2, (tlo_x1 - camera_x, tlo_y2 - camera_y))
+        screen.blit(tlo5, (tlo_x2 - camera_x, tlo_y2 - camera_y))
+        screen.blit(tlo2, (tlo_x2 - camera_x, tlo_y3 - camera_y))
+        screen.blit(tlo2, (tlo_x1 - camera_x, tlo_y3 - camera_y))
+        screen.blit(tlo2, (tlo_x - camera_x, tlo_y4 - camera_y))
         screen.blit(player, (pos1.x - camera_x, pos1.y - camera_y))
         
         pygame.draw.rect(screen,(100, 100, 100), (10, 50, 200, 20))
 
-        tekst_czas = font.render(f"czas: {lata} l. {miesiace} mies. {dni} d. {godziny} godz. {minuty} min. {sekundy} sek.", True, (255, 255, 255))
+        tekst_czas = font.render(f"czas: {lata} l. {miesiace} mies. {dni} d. {godziny} godz. {minuty} min. {sekundy} sek.", True, (255, 255, 255)) 
+        położenie_gracza = font.render(f"pozycja: ({pos1.x}, {pos1.y})", True, (255, 255, 255)) 
         screen.blit(tekst_czas, (10, 10))
+        screen.blit(położenie_gracza, (10, 80))
 
         # aktualna stamina
         pygame.draw.rect(screen, (0, 0, 255), (10, 50, 2 * stamina, 20))
