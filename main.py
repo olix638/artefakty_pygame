@@ -52,39 +52,41 @@ class dodanie_stat:
         self.tury = wtury
         self.wytrzymałość = wwytrzymałość
 zbroje_def = {
-    "czarno_zbroja": ("czarno zbroja", {"głowa":0, "klatka":20, "lręka":5, "pręka":5, "brzuch":20, "lrzebro":10, "przebro":10, "lnoga":0, "pnoga":0}, 10, 0, (100, 150)),
-    "brak_zbroi": ("brak zbroi", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, 0, 0, (0, 0)),
-    "jasno_zbroja": ("jasno zbroja", {"głowa":20, "klatka":20, "lręka":10, "pręka":10, "brzuch":30, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, 0, 0, (100, 120)),
-    "łuska_smoka": ("łuska smoka", {"głowa":0, "klatka":300, "lręka":0, "pręka":0, "brzuch":500, "lrzebro":50, "przebro":50, "lnoga":0, "pnoga":0}, 500, 0, (500, 500)),
-    "sdz_metalowa_zbroja": ("sdz metalowa zbroja", {"głowa":40, "klatka":50, "lręka":10, "pręka":10, "brzuch":50, "lrzebro":40, "przebro":40, "lnoga":60, "pnoga":60}, 0, 0, (10, 50)),
-    "metalowa_zbroja": ("metalowa zbroja", {"głowa":50, "klatka":100, "lręka":70, "pręka":70, "brzuch":120, "lrzebro":100, "przebro":100, "lnoga":80, "pnoga":80}, 0, 0, (100, 150)),
-    "zbroja_z_błota_i_liści": ("zbroja z błota i liści", {"głowa":0, "klatka":5, "lręka":0, "pręka":0, "brzuch":10, "lrzebro":1, "przebro":1, "lnoga":5, "pnoga":5}, 0, 0, (10, 20))
+    "czarno_zbroja": ("czarno zbroja", {"głowa":0, "klatka":20, "lręka":5, "pręka":5, "brzuch":20, "lrzebro":10, "przebro":10, "lnoga":0, "pnoga":0}, (5,10), 0, (100, 150)),
+    "brak_zbroi": ("brak zbroi", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, (0,0), 0, (0, 0)),
+    "jasno_zbroja": ("jasno zbroja", {"głowa":20, "klatka":20, "lręka":10, "pręka":10, "brzuch":30, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, (0,0), 0, (100, 120)),
+    "łuska_smoka": ("łuska smoka", {"głowa":0, "klatka":300, "lręka":0, "pręka":0, "brzuch":500, "lrzebro":50, "przebro":50, "lnoga":0, "pnoga":0}, (400,500), 0, (500, 500)),
+    "sdz_metalowa_zbroja": ("sdz metalowa zbroja", {"głowa":40, "klatka":50, "lręka":10, "pręka":10, "brzuch":50, "lrzebro":40, "przebro":40, "lnoga":60, "pnoga":60}, (0,0), 0, (10, 50)),
+    "metalowa_zbroja": ("metalowa zbroja", {"głowa":50, "klatka":100, "lręka":70, "pręka":70, "brzuch":120, "lrzebro":100, "przebro":100, "lnoga":80, "pnoga":80}, (0,0), 0, (100, 150)),
+    "zbroja_z_błota_i_liści": ("zbroja z błota i liści", {"głowa":0, "klatka":5, "lręka":0, "pręka":0, "brzuch":10, "lrzebro":1, "przebro":1, "lnoga":5, "pnoga":5}, (0,0), 0, (10, 20))
 }
 bronie_def = {
-    "brak_broni": ("brak broni", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, 0, 0, (0, 0)),
-    "łuk": ("łuk", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, 50, 0, (50, 100)),
-    "topur": ("topur", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, 0, 500, (500, 500)),
-    "włócznia": ("włócznia", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, 0, 20, (100, 200)),
-    "ostra_włócznia": ("ostra włócznia", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, 0, 50, (100, 150)),
-    "cięki_patyk": ("cięki patyk", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, 0, 10, (10, 20))
+    "brak_broni": ("brak broni", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, (0, 0), 0, (0, 0)),
+    "łuk": ("łuk", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, (30,50), 0, (50, 100)),
+    "topur": ("topur", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, (450,500), 0, (500, 500)),
+    "włócznia": ("włócznia", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, (20, 60), 0, (100, 200)),
+    "ostra_włócznia": ("ostra włócznia", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, (50, 100), 0, (100, 150)),
+    "cięki_patyk": ("cięki patyk", {"głowa":0, "klatka":0, "lręka":0, "pręka":0, "brzuch":0, "lrzebro":0, "przebro":0, "lnoga":0, "pnoga":0}, (20, 30), 0, (10, 20))
 }
 def stworz_przedmiot(definicja):
-    nazwa, obrona, atak, tury, (min_w, max_w) = definicja
-    wartosc = randint(min_w, max_w)
-    return dodanie_stat(nazwa, obrona, atak, tury, wartosc)
+    nazwa, obrona, (min_atak, max_atak), tury, (min_w, max_w) = definicja
+    atak = randint(min_atak, max_atak)
+    wytrzymałość = randint(min_w, max_w)
+    return dodanie_stat(nazwa, obrona, atak, tury, wytrzymałość)
 def daj_zbroje(nazwa):
     return stworz_przedmiot(zbroje_def[nazwa])
 def daj_bron(nazwa):
     return stworz_przedmiot(bronie_def[nazwa])
 class Postać:
-    wróżki = 0
-    ludzie = 0
-    elfy = 0
-    Gobliny = 0
+    wróżki = {"ludność wróżek": 0}
+    ludzie = {"ludność ludzi": 0, "Ludność ludzi dołączonych do spiczastych jastrzębi": 0,"Ludność ludzi dołączonych do skalnych rycerzy/wędrowców": 0, "ludność ludzi dołączonych do obu szkół": 0}
+    elfy = {"ludność elfów": 0}
+    gobliny = {"ludność goblinów": 0, "ludność ocalonych goblinów": 0, "ludność cyklistów": 0, "cała ludność ocalonych goblinów": 0, "ludność przeklętych goblinów": 0, "ludność łowców": 0, "ludność ocalonych poprostu żyjących goblinów": 0, "ludność naiwnych łowców": 0, "ludność nie naiwnych łowców": 0, "ludność łowców z sensem": 0, "ludność przeklętych łowców": 0, "ludność przeklętych goblinów nie będących łowcami": 0}
     żywi = []
     polegli = []
-    def __init__(self, istota, imie, głowa, klatka, lręka, pręka, brzuch, lrzebro, przebro, lnoga, pnoga, napojenie,mnapojenie, głód, mgłód, atak, obrona, zbroja, broń,chce_zatakować,musi,x,y,szybkość,szybkość_ataku,hitbox_w, hitbox_h, offset_x, offset_y):
+    def __init__(self, istota, typ, imie, Nazwisko, głowa, klatka, lręka, pręka, brzuch, lrzebro, przebro, lnoga, pnoga, napojenie,mnapojenie, głód, mgłód, atak, obrona, zbroja, broń,chce_zatakować,musi,x,y,szybkość,szybkość_ataku,hitbox_w, hitbox_h, offset_x, offset_y):
         self.imie = imie
+        self.Nazwisko = Nazwisko
         self.głód = głód
         self.mgłód = mgłód
         self.napojenie = napojenie
@@ -140,15 +142,29 @@ class Postać:
 
         Postać.żywi.append(self)
         if istota == "wróżka":
-            Postać.wróżki += 1
+            Postać.wróżki["ludność wróżek"] += 1
         elif istota == "człowiek":
-            Postać.ludzie += 1
+            Postać.ludzie["ludność ludzi"] += 1
+            if typ == "szkoła spiczastych jastrząbi":
+                Postać.ludzie["Ludność ludzi dołączonych do spiczastych jastrzębi"] += 1
+            elif typ == "szkoła skalnych rycerzy/wędrowców":
+                Postać.ludzie["Ludność ludzi dołączonych do skalnych rycerzy/wędrowców"] += 1
+            elif typ == "oba szkoły":
+                Postać.ludzie["ludność ludzi dołączonych do obu szkół"] += 1
+                Postać.ludzie["Ludność ludzi dołączonych do spiczastych jastrzębi"] += 1
+                Postać.ludzie["Ludność ludzi dołączonych do skalnych rycerzy/wędrowców"] += 1
         elif istota == "elf":
-            Postać.elfy += 1
+            Postać.elfy["ludność elfów"] += 1
         elif istota == "Goblin":
-            Postać.Gobliny += 1
-    def wczytaj(self,wimie,wgłód,wmgłód,wnapojenie,wmnapojenie,wistota,wgłowa,wklatka,wlręka,wpręka,wbrzuch,wlrzebro,wprzebro,wlnoga,wpnoga,wartefakty,wza_atak,wza_obrona,watak,wobrona,wzbroja,wbronie,wumiejętności,wciało,wnczęści_ciała,wczęści_ciała,wogłuszony,wczas_ogłuszenia,wchce,wmusi,wtury,wdrużyna,wwrogowie,wekwipunek,woszczędzenie,wrelacje,wwochuk_uses,wcozwoj_uses,wx,wy,wplansza):
+            Postać.gobliny["ludność goblinów"] += 1
+            if typ == "ocalały":
+                Postać.gobliny["ludność ocalonych goblinów"] += 1
+            elif typ == "cyklista":
+                Postać.gobliny["ludność cyklistów"] += 1
+                Postać.gobliny["cała ludność ocalonych goblinów"] += 1
+    def wczytaj(self,wimie,wNazwisko,wgłód,wmgłód,wnapojenie,wmnapojenie,wistota,wgłowa,wklatka,wlręka,wpręka,wbrzuch,wlrzebro,wprzebro,wlnoga,wpnoga,wartefakty,wza_atak,wza_obrona,watak,wobrona,wzbroja,wbronie,wumiejętności,wciało,wnczęści_ciała,wczęści_ciała,wogłuszony,wczas_ogłuszenia,wchce,wmusi,wtury,wdrużyna,wwrogowie,wekwipunek,woszczędzenie,wrelacje,wwochuk_uses,wcozwoj_uses,wx,wy,wplansza):
         self.imie = wimie
+        self.Nazwisko = wNazwisko
         self.głód = wgłód
         self.mgłód = wmgłód
         self.napojenie = wnapojenie
@@ -416,32 +432,33 @@ class Postać:
         return f"{przeciwnik.imie} został cofnięty do epoki kamienia łupanego!"
     def __str__(self):
         return f"{self.imie}({self.istota}):\n  Życie={self.ciało}\n  Atak={self.atak}\n  Obrona={self.obrona}\n  punkty oszczędzienia = {self.oszczędzenie}\n  broń: {self.broń.nazwa}\n  zbroja: {self.zbroja.nazwa}"
+w = 5
 pos1 = Postać(
-    "człowiek", "Tomek",
+    "człowiek","oba szkoły", "Tomek", "Kowalski",
     200.0, 250.0, 50.0, 10.0, 75.0, 12.5, 12.5, 175.0, 175.0,
     100.0, 100.0, 100.0, 100.0,
     10.0, {"głowa": 10, "klatka": 10, "lręka": 5, "pręka": 0, "brzuch": 10, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
     daj_zbroje("zbroja_z_błota_i_liści"),
     daj_bron("cięki_patyk"),
     True, False,
-    0, 0,
-    3,7,
+    369004.0*w, -240470.0*w,
+    2*w,7,
     50, 50, -25, -25
 )
 pos2 = Postać(
-    "Goblin", "Buzg",
+    "Goblin", "cyklista", "Buzg", "Zigug",
     200000.0, 250000.0, 44800.0, 50000.0, 75000.0, 12500.0, 12500.0, 175000.0, 175000.0,
     200.0, 300.0, 50.0, 100,
-    0.0, {"głowa": 100, "klatka": 200, "lręka": 150, "pręka": 150, "brzuch": 200, "lrzebro": 50, "przebro": 50, "lnoga": 300, "pnoga": 300, "ogon": 500},
+    300.0, {"głowa": 100, "klatka": 200, "lręka": 150, "pręka": 150, "brzuch": 200, "lrzebro": 50, "przebro": 50, "lnoga": 300, "pnoga": 300, "ogon": 500},
     daj_zbroje("brak_zbroi"),
     daj_bron("topur"),
     False, True,
     0,0,
-    1,4,
+    2.5,4,
     100, 100, -50, -50
 )
 pos3 = Postać(
-    "elf", "Elenor",
+    "elf","nie ma typu", "Elenor", "Lindholm",
     200.0, 250.0, 50.0, 50.0, 75.0, 12.5, 12.5, 175.0, 175.0,
     100.0, 100.0, 100.0, 100.0,
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -449,11 +466,11 @@ pos3 = Postać(
     daj_bron("brak_broni"),
     False, False,
     0,0,
-    8,7,
+    20,7,
     50, 50, -25, -25
 )
 pos4 = Postać(
-    "elf", "Romeo",
+    "elf","nie ma typu", "Romeo", "Monteculsi",
     200.0, 250.0, 50.0, 50.0, 75.0, 12.5, 12.5, 175.0, 175.0,
     100.0, 100.0, 100.0, 100.0,
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -461,11 +478,11 @@ pos4 = Postać(
     daj_bron("łuk"),
     True, False,
     0,0,
-    2,3,
+    20,8,
     50, 50, -25, -25
 )
 pos5 = Postać(
-    "elf", "Rukur",
+    "elf","nie ma typu", "Rukur", "Ragnarsson",
     200.0, 250.0, 50.0, 50.0, 75.0, 12.5, 12.5, 175.0, 175.0,
     100.0, 100.0, 100.0, 100.0,
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -473,11 +490,11 @@ pos5 = Postać(
     daj_bron("włócznia"),
     False, True,
     0,0,
-    7,8,
+    20,8,
     50, 50, -25, -25
 )
 pos6 = Postać(
-    "elf", "Rokil",
+    "elf","nie ma typu", "Rokil", "Ragnarsson",
     200.0, 250.0, 50.0, 50.0, 75.0, 12.5, 12.5, 175.0, 175.0,
     100.0, 100.0, 100.0, 100.0,
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -485,31 +502,55 @@ pos6 = Postać(
     daj_bron("włócznia"),
     False, True,
     0,0,
-    7,8,
+    20,8,
     50, 50, -25, -25
 )
 pos7 = Postać(
-    "Goblin", "Azyl",
+    "Goblin","cyklista", "Azyl","Lazur",
     400.0, 500.0, 100.0, 100.0, 150.0, 25.0, 25.0, 350.0, 350.0,
     200.0, 300.0, 50.0, 100,
-    0.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
+    100.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
     daj_zbroje("brak_zbroi"),
     daj_bron("brak_broni"),
     False, False,
     0,0,
-    7,8,
+    20,8,
     50, 50, -25, -25
 )
 pos8 = Postać(
-    "Goblin", "Zazul",
+    "Goblin", "ocalały", "Zazul", "Zigug",
     200000.0, 250000.0, 44800.0, 50000.0, 75000.0, 12500.0, 12500.0, 175000.0, 175000.0,
     200.0, 300.0, 50.0, 100,
-    0.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
+    300.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
     daj_zbroje("brak_zbroi"),
     daj_bron("brak_broni"),
     False, False,
     0,0,
-    7,8,
+    20,8,
+    50, 50, -25, -25
+)
+pos9 = Postać(
+    "człowiek", "szkoła spiczastych jastrząbi", "Koralina", "Kowalska",
+    5000.0, 6250.0, 1250.0, 1250.0, 1875.0, 312.5, 312.5, 4375.0, 4375.0,
+    100.0, 100.0, 100.0, 100.0,
+    125.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
+    daj_zbroje("brak_zbroi"),
+    daj_bron("brak_broni"),
+    False, False,
+    0,0,
+    10,7,
+    50, 50, -25, -25
+)
+pos10 = Postać(
+    "człowiek", "szkoła skalnych rycerzy/wędrowców", "Kamil", "Radziński",
+    5000.0, 6250.0, 1250.0, 1250.0, 1875.0, 312.5, 312.5, 4375.0, 4375.0,
+    100.0, 100.0, 100.0, 100.0,
+    125.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
+    daj_zbroje("brak_zbroi"),
+    daj_bron("brak_broni"),
+    False, False,
+    0,0,
+    10,7,
     50, 50, -25, -25
 )
 pos1.dodaj_relacje(pos3.imie, {"zaufanie": 20, "atak": 0, "decyzje": []})
@@ -555,7 +596,15 @@ def gra():
     pygame.display.set_caption("Artefakty")
     screen = pygame.display.set_mode((800, 600))
     clock = pygame.time.Clock()
-
+    deska = pygame.image.load("deska.png").convert_alpha()
+    
+    deska = pygame.transform.scale(deska,(250,100))
+    deska1 = pygame.transform.rotate(deska,45)
+    deska2 = pygame.transform.rotate(deska,90)
+    deska3 = pygame.transform.rotate(deska,135)
+    deska4 = pygame.transform.rotate(deska,180)
+    deska5 = pygame.transform.rotate(deska,225)
+    deska6 = pygame.transform.rotate(deska,270)
     # ładowanie tła
     tlo = pygame.image.load("tlo.png").convert()
     tlo1 = pygame.image.load("tlo1.png").convert()
@@ -563,13 +612,32 @@ def gra():
     tlo3 = pygame.image.load("tlo3.png").convert()
     tlo4 = pygame.image.load("tlo4.png").convert()
     tlo5 = pygame.transform.rotate(tlo3, 180)
+    tlo6 = pygame.image.load("tlo5.png").convert()
+    tlo7 = pygame.image.load("tlo6.png").convert()
+    tlo8 = pygame.transform.rotate(tlo7, 180)
+    tlo9 = pygame.image.load("tlo7.png").convert()
+    tlo10 = pygame.transform.rotate(tlo7, 90)
+    tlo11 = pygame.transform.rotate(tlo9, 90)
+    tlo12 = pygame.transform.rotate(tlo9, 270)
+    tlo13 = pygame.transform.rotate(tlo7, 270)
+    tlo14 = pygame.transform.rotate(tlo9, 180)
     
+    tlo = pygame.transform.scale(tlo, (800, 600))
     tlo1 = pygame.transform.scale(tlo1, (800, 600))
     tlo = pygame.transform.scale(tlo, (800, 600))
     tlo2 = pygame.transform.scale(tlo2, (800, 600))
     tlo3 = pygame.transform.scale(tlo3, (800, 600))
     tlo4 = pygame.transform.scale(tlo4, (800, 600))
     tlo5 = pygame.transform.scale(tlo5, (800, 600))
+    tlo6 = pygame.transform.scale(tlo6, (800, 600))
+    tlo7 = pygame.transform.scale(tlo7, (800, 600))
+    tlo8 = pygame.transform.scale(tlo8, (800, 600))
+    tlo9 = pygame.transform.scale(tlo9, (800, 600))
+    tlo10 = pygame.transform.scale(tlo10, (800, 600))
+    tlo11 = pygame.transform.scale(tlo11, (800, 600))
+    tlo12 = pygame.transform.scale(tlo12, (800, 600))
+    tlo13 = pygame.transform.scale(tlo13, (800, 600))
+    tlo14 = pygame.transform.scale(tlo14, (800, 600))
     speed = 3  # pixel po pixelu
     stamina = 100.0
     frame = 0
@@ -604,13 +672,12 @@ def gra():
 
     # licznik czasu
     ostatnia_aktualizacja = time.time()
-
     lata = 390006
     miesiace = 5
     dni = 24
     godziny = 17
     minuty = 26
-    sekundy = 36
+    sekundy = 35
 
     # Przeliczenie na sekundy (rok = 365 dni, miesiąc = 30 dni)
     calkowite_sekundy = (
@@ -622,7 +689,7 @@ def gra():
         (lata * 365 * 86400)
     )
 
-    lata, miesiace, dni, godziny, minuty, sekundy = zamien_czas(calkowite_sekundy) # Wyświetli: 12301244312396
+    lata, miesiace, dni, godziny, minuty, sekundy = zamien_czas(calkowite_sekundy)
     while True:
         a = 10  # domyślna szybkość animacji
 
@@ -630,7 +697,7 @@ def gra():
         aktualny_czas = int(time.time())
 
         # aktualizacja co 60 sekund realnego czasu
-        if aktualny_czas - ostatnia_aktualizacja >= 1:
+        if aktualny_czas - ostatnia_aktualizacja >= 0.5:
             calkowite_sekundy += 1
             ostatnia_aktualizacja = aktualny_czas
 
@@ -725,11 +792,11 @@ def gra():
         else:
             pass
         if keys[pygame.K_LSHIFT] and stamina > 0 and any(lista):
-            speed = pos1.szybkość+5            
+            speed = pos1.szybkość+1*w
             stamina -= 0.05
         elif (not keys[pygame.K_LSHIFT] or stamina <= 0):
             speed = pos1.szybkość
-            stamina += 0.001
+            stamina += 0.01
         else:
             pass    
         if stamina > 100:
@@ -740,30 +807,59 @@ def gra():
         screen.fill((0, 0, 0))
 
         # pozycja jednego tła na mapie
-        tlo_x = -280
-        tlo_y = -220
+        tlo_x = (369004.0*w) - 280
+        tlo_y = (-240470.0*w) - 220
         tlo_y1 = tlo_y + 600
         tlo_y2 = tlo_y1 + 600
         tlo_y3 = tlo_y2 + 600
         tlo_y4 = tlo_y3 + 600
+        tlo_y5 = tlo_y4 + 600
+        tlo_y6 = tlo_y5 + 600
+        tlo_y7 = tlo_y5 + 300
         tlo_x1 = tlo_x + 800
         tlo_x2 = tlo_x - 800
+        tlo_x3 = tlo_x2 - 800
+        tlo_x4 = tlo_x1 + 800
+        tlo_x5 = tlo_x2 + 400
         # rysowanie jednego tła
         screen.blit(tlo, (tlo_x - camera_x, tlo_y - camera_y))
         screen.blit(tlo1, (tlo_x - camera_x, tlo_y1 - camera_y))
+        screen.blit(tlo7, (tlo_x2 - camera_x, tlo_y1 - camera_y))
+        screen.blit(tlo7, (tlo_x1 - camera_x, tlo_y1 - camera_y))
         screen.blit(tlo3, (tlo_x - camera_x, tlo_y2 - camera_y))
         screen.blit(tlo4, (tlo_x - camera_x, tlo_y3 - camera_y))
         screen.blit(tlo2, (tlo_x1 - camera_x, tlo_y2 - camera_y))
         screen.blit(tlo5, (tlo_x2 - camera_x, tlo_y2 - camera_y))
+        screen.blit(tlo9, (tlo_x3 - camera_x, tlo_y1 - camera_y))
+        screen.blit(tlo10, (tlo_x3 - camera_x, tlo_y2 - camera_y))
+        screen.blit(tlo10, (tlo_x3 - camera_x, tlo_y3 - camera_y))
+        screen.blit(tlo11, (tlo_x3 - camera_x, tlo_y4 - camera_y))
+        screen.blit(tlo12, (tlo_x4 - camera_x, tlo_y1 - camera_y))
+        screen.blit(tlo13, (tlo_x4 - camera_x, tlo_y2 - camera_y))
+        screen.blit(tlo14, (tlo_x4 - camera_x, tlo_y4 - camera_y))
+        screen.blit(tlo13, (tlo_x4 - camera_x, tlo_y3 - camera_y))
+        screen.blit(tlo8, (tlo_x2 - camera_x, tlo_y3 - camera_y))
         screen.blit(tlo2, (tlo_x2 - camera_x, tlo_y3 - camera_y))
         screen.blit(tlo2, (tlo_x1 - camera_x, tlo_y3 - camera_y))
-        screen.blit(tlo2, (tlo_x - camera_x, tlo_y4 - camera_y))
+        screen.blit(tlo6, (tlo_x - camera_x, tlo_y4 - camera_y))
+        screen.blit(tlo8, (tlo_x2 - camera_x, tlo_y4 - camera_y))
+        screen.blit(tlo8, (tlo_x1 - camera_x, tlo_y4 - camera_y))
+        screen.blit(tlo6, (tlo_x - camera_x, tlo_y5 - camera_y))
+        screen.blit(tlo8,(tlo_x - camera_x, tlo_y6 - camera_y))
+        screen.blit(tlo10,(tlo_x2 - camera_x, tlo_y6 - camera_y))
+        screen.blit(tlo13,(tlo_x1 - camera_x, tlo_y6 - camera_y))
+        screen.blit(tlo12,(tlo_x1 - camera_x, tlo_y5 - camera_y))
+        screen.blit(tlo9,(tlo_x2 - camera_x, tlo_y5 - camera_y))
+        screen.blit(deska,(tlo_x5 - camera_x, tlo_y7 - camera_y))
+        screen.blit(deska3,((tlo_x5 - 20) - camera_x, (tlo_y7-100) - camera_y))
+        screen.blit(deska6,(tlo_x5 - camera_x,tlo_y7 - camera_y))
+        
         screen.blit(player, (pos1.x - camera_x, pos1.y - camera_y))
         
         pygame.draw.rect(screen,(100, 100, 100), (10, 50, 200, 20))
 
         tekst_czas = font.render(f"czas: {lata} l. {miesiace} mies. {dni} d. {godziny} godz. {minuty} min. {sekundy} sek.", True, (255, 255, 255)) 
-        położenie_gracza = font.render(f"pozycja: ({pos1.x}, {pos1.y})", True, (255, 255, 255)) 
+        położenie_gracza = font.render(f"pozycja: ({pos1.x/w}, {(pos1.y*-1)/w})", True, (255, 255, 255)) 
         screen.blit(tekst_czas, (10, 10))
         screen.blit(położenie_gracza, (10, 80))
 
@@ -771,4 +867,4 @@ def gra():
         pygame.draw.rect(screen, (0, 0, 255), (10, 50, 2 * stamina, 20))
         pygame.display.update()
         clock.tick(60)
-gra()
+if __name__ == "__main__":    gra()
