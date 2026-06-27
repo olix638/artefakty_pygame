@@ -29,24 +29,24 @@ def pokaż_g():
         "ludność przeklętych łowców": ludność_przeklętych_łowców,
         "ludność przeklętych goblinów nie będących łowcami": ludność_przeklętych_goblinów_nie_będących_łowcami,
         
-        "stosunek cyklistów na całą ludność": f"{ludność_cyklistów / ludność_goblinów * 100:.2f}%",
-        "stosunek ocalonych goblinów na całą ludność": f"{ludność_ocalałych_goblinów / ludność_goblinów * 100:.2f}%",
-        "stosunek łowców na całą ludność": f"{ludność_łowców / ludność_goblinów * 100:.2f}%",
-        "stosunek łowców na ocalonych Goblinów": f"{ludność_łowców / ludność_ocalałych_goblinów * 100:.2f}%",
-        "stosunek przeklętych Goblinów na całą ludność": f"{ludność_przeklętych_goblinów / ludność_goblinów * 100:.2f}%",
-        "stosunek całą ludność ocalonych Goblinów na całą ludność Goblinów": f"{cała_ludność_ocalałych_goblinów / ludność_goblinów * 100:.2f}%",
-        "stosunek naiwnych łowców na łowców": f"{ludność_naiwnych_łowców / ludność_łowców * 100:.2f}%",
-        "stosunek nie naiwnych łowców na łowców": f"{ludność_nie_naiwnych_łowców / ludność_łowców * 100:.2f}%",
-        "stosunek naiwnych łowców na całą ludność": f"{ludność_naiwnych_łowców / ludność_goblinów * 100:.2f}%",
-        "stosunek nie naiwnych łowców na całą ludność": f"{ludność_nie_naiwnych_łowców / ludność_goblinów * 100:.2f}%",
-        "stosunek przeklętych łowców na całą ludność": f"{ludność_przeklętych_łowców / ludność_goblinów * 100:.2f}%",
-        "stosunek przeklętych łowców na łowców": f"{ludność_przeklętych_łowców / ludność_łowców * 100:.2f}%",
-        "stosunek łowców z sensem na całą ludność": f"{ludność_łowców_z_sensem / ludność_goblinów * 100:.2f}%",
-        "stosunek łowców z sensem na łowców": f"{ludność_łowców_z_sensem / ludność_łowców * 100:.2f}%",
-        "stosunek łowców z sensem na ocalonych Goblinów": f"{ludność_łowców_z_sensem / ludność_ocalałych_goblinów * 100:.2f}%",
-        "stosunek ocalonych poprostu żyjących Goblinów na całą ludność": f"{ludność_ocalałych_poprostu_żyjących / ludność_goblinów * 100:.2f}%",
-        "stosunek ocalonych poprostu żyjących Goblinów na ocalonych Goblinów": f"{ludność_ocalałych_poprostu_żyjących / ludność_ocalałych_goblinów * 100:.2f}%",
-        "stosunek przeklętych Goblinów nie będących łowcami na całą ludność": f"{ludność_przeklętych_goblinów_nie_będących_łowcami / ludność_goblinów * 100:.2f}%"
+        "stosunek cyklistów na całą ludność": f"{ludność_cyklistów / ludność_goblinów * 100}%",
+        "stosunek ocalonych goblinów na całą ludność": f"{ludność_ocalałych_goblinów / ludność_goblinów * 100}%",
+        "stosunek łowców na całą ludność": f"{ludność_łowców / ludność_goblinów * 100}%",
+        "stosunek łowców na ocalonych Goblinów": f"{ludność_łowców / ludność_ocalałych_goblinów * 100}%",
+        "stosunek przeklętych Goblinów na całą ludność": f"{ludność_przeklętych_goblinów / ludność_goblinów * 100}%",
+        "stosunek całą ludność ocalonych Goblinów na całą ludność Goblinów": f"{cała_ludność_ocalałych_goblinów / ludność_goblinów * 100}%",
+        "stosunek naiwnych łowców na łowców": f"{ludność_naiwnych_łowców / ludność_łowców * 100}%",
+        "stosunek nie naiwnych łowców na łowców": f"{ludność_nie_naiwnych_łowców / ludność_łowców * 100}%",
+        "stosunek naiwnych łowców na całą ludność": f"{ludność_naiwnych_łowców / ludność_goblinów * 100}%",
+        "stosunek nie naiwnych łowców na całą ludność": f"{ludność_nie_naiwnych_łowców / ludność_goblinów * 100}%",
+        "stosunek przeklętych łowców na całą ludność": f"{ludność_przeklętych_łowców / ludność_goblinów * 100}%",
+        "stosunek przeklętych łowców na łowców": f"{ludność_przeklętych_łowców / ludność_łowców * 100}%",
+        "stosunek łowców z sensem na całą ludność": f"{ludność_łowców_z_sensem / ludność_goblinów * 100}%",
+        "stosunek łowców z sensem na łowców": f"{ludność_łowców_z_sensem / ludność_łowców * 100}%",
+        "stosunek łowców z sensem na ocalonych Goblinów": f"{ludność_łowców_z_sensem / ludność_ocalałych_goblinów * 100}%",
+        "stosunek ocalonych poprostu żyjących Goblinów na całą ludność": f"{ludność_ocalałych_poprostu_żyjących / ludność_goblinów * 100}%",
+        "stosunek ocalonych poprostu żyjących Goblinów na ocalonych Goblinów": f"{ludność_ocalałych_poprostu_żyjących / ludność_ocalałych_goblinów * 100}%",
+        "stosunek przeklętych Goblinów nie będących łowcami na całą ludność": f"{ludność_przeklętych_goblinów_nie_będących_łowcami / ludność_goblinów * 100}%"
     }
     return statystyki_goblinów
 
@@ -69,10 +69,4 @@ ludność_łowców_z_sensem = ludność_naiwnych_łowców + ludność_nie_naiwny
 
 # 2. Pobieramy statystyki PO rzezi
 staty_po = pokaż_g()
-print("=================== PRZED RZEZIĄ ===================")
-for klucz, wartosc in staty_przed.items():
-    print(f"{klucz}: {wartosc}")
-
-print("\n=================== PO RZEZI ===================")
-for klucz, wartosc in staty_po.items():
-    print(f"{klucz}: {wartosc}")
+print(staty_przed["stosunek cyklistów na całą ludność"])

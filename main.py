@@ -596,15 +596,37 @@ def gra():
     pygame.display.set_caption("Artefakty")
     screen = pygame.display.set_mode((800, 600))
     clock = pygame.time.Clock()
-    deska = pygame.image.load("deska.png").convert_alpha()
-    
-    deska = pygame.transform.scale(deska,(250,100))
-    deska1 = pygame.transform.rotate(deska,45)
-    deska2 = pygame.transform.rotate(deska,90)
-    deska3 = pygame.transform.rotate(deska,135)
-    deska4 = pygame.transform.rotate(deska,180)
-    deska5 = pygame.transform.rotate(deska,225)
-    deska6 = pygame.transform.rotate(deska,270)
+    def rozmiar_boxu(rozb,nazwa):
+        box1 = pygame.image.load("box.png").convert_alpha()
+        box1 = pygame.transform.scale(box1,(rozb,rozb))
+        box = {"box1" : pygame.transform.scale(box1,(rozb,rozb)),
+        "box2" : pygame.transform.rotate(box1,45),
+        "box3" : pygame.transform.rotate(box1,90),
+        "box4" : pygame.transform.rotate(box1,135),
+        "box5" : pygame.transform.rotate(box1,180),
+        "box6" : pygame.transform.rotate(box1,225),
+        "box7" : pygame.transform.rotate(box1,270)}
+        return box[nazwa]
+    def rozmiar_deski(rozd,nazwa):
+        deska1 = pygame.image.load("deska.png").convert_alpha()
+        deska1 = pygame.transform.scale(deska1,(rozd,rozd/2))
+        deska = {"deska1" : pygame.transform.scale(deska1,(rozd,rozd/2)),
+        "deska2" : pygame.transform.rotate(deska1,45),
+        "deska3" : pygame.transform.rotate(deska1,90),
+        "deska4" : pygame.transform.rotate(deska1,135),
+        "deska5" : pygame.transform.rotate(deska1,180),
+        "deska6" : pygame.transform.rotate(deska1,225),
+        "deska7" : pygame.transform.rotate(deska1,270)}
+        return deska[nazwa]
+    deska1 = rozmiar_deski(388,"deska1")
+    deska2 = rozmiar_deski(216,"deska7")
+    deska3 = rozmiar_deski(384,"deska4")
+    box1 = rozmiar_boxu(252.252,"box1")
+    box2 = rozmiar_boxu(251.5,"box5")
+    box3 = rozmiar_boxu(252.452,"box4")
+    box4 = rozmiar_boxu(250.1,"box1")
+    box5 = rozmiar_boxu(253.645,"box1")
+    box6 = rozmiar_boxu(250,"box3")
     # ładowanie tła
     tlo = pygame.image.load("tlo.png").convert()
     tlo1 = pygame.image.load("tlo1.png").convert()
@@ -621,6 +643,14 @@ def gra():
     tlo12 = pygame.transform.rotate(tlo9, 270)
     tlo13 = pygame.transform.rotate(tlo7, 270)
     tlo14 = pygame.transform.rotate(tlo9, 180)
+    tlo15 = pygame.image.load("tlo8.png").convert()
+    tlo16 = pygame.image.load("tlo9.png").convert()
+    tlo17 = pygame.transform.rotate(tlo15, 90)
+    tlo18 = pygame.transform.rotate(tlo15, 180)
+    tlo19 = pygame.transform.rotate(tlo15, 270)
+    tlo20 = pygame.transform.rotate(tlo16, 90)
+    tlo21 = pygame.transform.rotate(tlo16, 180)
+    tlo22 = pygame.transform.rotate(tlo16, 270)
     
     tlo = pygame.transform.scale(tlo, (800, 600))
     tlo1 = pygame.transform.scale(tlo1, (800, 600))
@@ -638,6 +668,14 @@ def gra():
     tlo12 = pygame.transform.scale(tlo12, (800, 600))
     tlo13 = pygame.transform.scale(tlo13, (800, 600))
     tlo14 = pygame.transform.scale(tlo14, (800, 600))
+    tlo15 = pygame.transform.scale(tlo15, (800, 600))
+    tlo16 = pygame.transform.scale(tlo16, (800, 600))
+    tlo17 = pygame.transform.scale(tlo17, (800, 600))
+    tlo18 = pygame.transform.scale(tlo18, (800, 600))
+    tlo19 = pygame.transform.scale(tlo19, (800, 600))
+    tlo20 = pygame.transform.scale(tlo20, (800, 600))
+    tlo21 = pygame.transform.scale(tlo21, (800, 600))
+    tlo22 = pygame.transform.scale(tlo22, (800, 600))
     speed = 3  # pixel po pixelu
     stamina = 100.0
     frame = 0
@@ -791,12 +829,14 @@ def gra():
             exit()
         else:
             pass
-        if keys[pygame.K_LSHIFT] and stamina > 0 and any(lista):
+        if keys[pygame.K_LSHIFT] and stamina > 0 and moving:
             speed = pos1.szybkość+1*w
             stamina -= 0.05
-        elif (not keys[pygame.K_LSHIFT] or stamina <= 0):
+        elif not moving:
             speed = pos1.szybkość
             stamina += 0.01
+        elif moving:
+            stamina += 0.005
         else:
             pass    
         if stamina > 100:
@@ -816,6 +856,8 @@ def gra():
         tlo_y5 = tlo_y4 + 600
         tlo_y6 = tlo_y5 + 600
         tlo_y7 = tlo_y5 + 300
+        tlo_y8 = tlo_y6 + 600
+        tlo_y9 = tlo_y8 + 600
         tlo_x1 = tlo_x + 800
         tlo_x2 = tlo_x - 800
         tlo_x3 = tlo_x2 - 800
@@ -831,13 +873,18 @@ def gra():
         screen.blit(tlo2, (tlo_x1 - camera_x, tlo_y2 - camera_y))
         screen.blit(tlo5, (tlo_x2 - camera_x, tlo_y2 - camera_y))
         screen.blit(tlo9, (tlo_x3 - camera_x, tlo_y1 - camera_y))
+        screen.blit(box1, ((tlo_x3 + 250) - camera_x, (tlo_y1 + 300) - camera_y))
         screen.blit(tlo10, (tlo_x3 - camera_x, tlo_y2 - camera_y))
         screen.blit(tlo10, (tlo_x3 - camera_x, tlo_y3 - camera_y))
+        screen.blit(box2,((tlo_x3 + 230) - camera_x, (tlo_y3 - 300) - camera_y))
         screen.blit(tlo11, (tlo_x3 - camera_x, tlo_y4 - camera_y))
+        screen.blit(box3, ((tlo_x3 + 240) - camera_x, (tlo_y4 + 56) - camera_y))
         screen.blit(tlo12, (tlo_x4 - camera_x, tlo_y1 - camera_y))
+        screen.blit(box4,((tlo_x4+310) - camera_x,(tlo_y1+300) - camera_y))
         screen.blit(tlo13, (tlo_x4 - camera_x, tlo_y2 - camera_y))
         screen.blit(tlo14, (tlo_x4 - camera_x, tlo_y4 - camera_y))
         screen.blit(tlo13, (tlo_x4 - camera_x, tlo_y3 - camera_y))
+        screen.blit(box5,((tlo_x4 + 310) - camera_x,(tlo_y3 - 300) - camera_y))
         screen.blit(tlo8, (tlo_x2 - camera_x, tlo_y3 - camera_y))
         screen.blit(tlo2, (tlo_x2 - camera_x, tlo_y3 - camera_y))
         screen.blit(tlo2, (tlo_x1 - camera_x, tlo_y3 - camera_y))
@@ -850,13 +897,15 @@ def gra():
         screen.blit(tlo13,(tlo_x1 - camera_x, tlo_y6 - camera_y))
         screen.blit(tlo12,(tlo_x1 - camera_x, tlo_y5 - camera_y))
         screen.blit(tlo9,(tlo_x2 - camera_x, tlo_y5 - camera_y))
-        screen.blit(deska,(tlo_x5 - camera_x, tlo_y7 - camera_y))
+        screen.blit(deska1,(tlo_x5 - camera_x, tlo_y7 - camera_y))
         screen.blit(deska3,((tlo_x5 - 20) - camera_x, (tlo_y7-100) - camera_y))
-        screen.blit(deska6,(tlo_x5 - camera_x,tlo_y7 - camera_y))
-        
+        screen.blit(deska2,(tlo_x5 - camera_x, tlo_y7 - camera_y))
+        screen.blit(tlo17,(tlo_x2 - camera_x,tlo_y8 - camera_y))
+        screen.blit(tlo19,(tlo_x1 - camera_x,tlo_y8 - camera_y))
+        screen.blit(tlo2, (tlo_x - camera_x, tlo_y8 - camera_y))
+        screen.blit(tlo19,(tlo_x3 - camera_x, tlo_y8 - camera_y))
+
         screen.blit(player, (pos1.x - camera_x, pos1.y - camera_y))
-        
-        pygame.draw.rect(screen,(100, 100, 100), (10, 50, 200, 20))
 
         tekst_czas = font.render(f"czas: {lata} l. {miesiace} mies. {dni} d. {godziny} godz. {minuty} min. {sekundy} sek.", True, (255, 255, 255)) 
         położenie_gracza = font.render(f"pozycja: ({pos1.x/w}, {(pos1.y*-1)/w})", True, (255, 255, 255)) 
@@ -867,4 +916,6 @@ def gra():
         pygame.draw.rect(screen, (0, 0, 255), (10, 50, 2 * stamina, 20))
         pygame.display.update()
         clock.tick(60)
+        # Aktualizuje podpis okna dodając aktualne FPS-y
+        pygame.display.set_caption(f"Artefakty | FPS: {int(clock.get_fps())}")
 if __name__ == "__main__":    gra()
