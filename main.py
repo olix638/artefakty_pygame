@@ -1,4 +1,4 @@
-#ma być 21040 Goblinów, 754 wróżek, 27504 ludzi i 25357 elfów
+#jest 21040 Goblinów, 754 wróżek, 27504 ludzi i 25357 elfów na całym świecie. grze będzie mniej. 
 from random import *
 import json
 import os
@@ -34,7 +34,7 @@ def wczytaj_gre(plik):
         return None
 class dodanie_stat:
     def __init__(self, nazwa, obrona, atak, tury, wytrzymałość):
-        self.nazwa = nazwa
+        self.nazwa = nazwa.split("|")
         self.obrona = obrona
         self.atak = atak
         self.tury = tury
@@ -85,6 +85,7 @@ class Postać:
     żywi = []
     polegli = []
     def __init__(self, istota, typ, imie, Nazwisko, głowa, klatka, lręka, pręka, brzuch, lrzebro, przebro, lnoga, pnoga, napojenie,mnapojenie, głód, mgłód, atak, obrona, zbroja, broń,chce_zatakować,musi,x,y,szybkość,szybkość_ataku,hitbox_w, hitbox_h, offset_x, offset_y):
+        self.lista_typów = [t.strip() for t in typ.split(",")]
         self.imie = imie
         self.Nazwisko = Nazwisko
         self.głód = głód
@@ -143,23 +144,25 @@ class Postać:
         Postać.żywi.append(self)
         if istota == "wróżka":
             Postać.wróżki["ludność wróżek"] += 1
+        elif istota == "elf":
+            Postać.elfy["ludność elfów"] += 1
+        # --- POPRAWIONE ZLICZANIE POPULACJI ---
         elif istota == "człowiek":
             Postać.ludzie["ludność ludzi"] += 1
-            if typ == "szkoła spiczastych jastrząbi":
+            if "szkoła spiczastych jastrząbi" in self.lista_typów:
                 Postać.ludzie["Ludność ludzi dołączonych do spiczastych jastrzębi"] += 1
-            elif typ == "szkoła skalnych rycerzy/wędrowców":
+            if "szkoła skalnych rycerzy/wędrowców" in self.lista_typów: # tutaj uwaga na ukośnik, jeśli go nie splitujesz
                 Postać.ludzie["Ludność ludzi dołączonych do skalnych rycerzy/wędrowców"] += 1
-            elif typ == "oba szkoły":
+            if "oba szkoły" in self.lista_typów:
                 Postać.ludzie["ludność ludzi dołączonych do obu szkół"] += 1
                 Postać.ludzie["Ludność ludzi dołączonych do spiczastych jastrzębi"] += 1
                 Postać.ludzie["Ludność ludzi dołączonych do skalnych rycerzy/wędrowców"] += 1
-        elif istota == "elf":
-            Postać.elfy["ludność elfów"] += 1
+
         elif istota == "Goblin":
             Postać.gobliny["ludność goblinów"] += 1
-            if typ == "ocalały":
+            if "ocalały" in self.lista_typów:
                 Postać.gobliny["ludność ocalonych goblinów"] += 1
-            elif typ == "cyklista":
+            if "cyklista" in self.lista_typów:
                 Postać.gobliny["ludność cyklistów"] += 1
                 Postać.gobliny["cała ludność ocalonych goblinów"] += 1
     def wczytaj(self,wimie,wNazwisko,wgłód,wmgłód,wnapojenie,wmnapojenie,wistota,wgłowa,wklatka,wlręka,wpręka,wbrzuch,wlrzebro,wprzebro,wlnoga,wpnoga,wartefakty,wza_atak,wza_obrona,watak,wobrona,wzbroja,wbronie,wumiejętności,wciało,wnczęści_ciała,wczęści_ciała,wogłuszony,wczas_ogłuszenia,wchce,wmusi,wtury,wdrużyna,wwrogowie,wekwipunek,woszczędzenie,wrelacje,wwochuk_uses,wcozwoj_uses,wx,wy,wplansza):
@@ -322,11 +325,7 @@ class Postać:
 
             # dodanie ataku broni
             if self.broń is not None:
-
-                if self.broń.nazwa == "łuk" and self.istota == "elf":
-                    self.atak += self.broń.atak + 20
-                else:
-                    self.atak += self.broń.atak
+                self.atak += self.broń.atak
     def dodaj_osobę_do_drużyny_nieoficjalnie(self, p1):
         if p1 not in self.drużyna:
             self.drużyna.append(p1)
@@ -432,21 +431,22 @@ class Postać:
         return f"{przeciwnik.imie} został cofnięty do epoki kamienia łupanego!"
     def __str__(self):
         return f"{self.imie}({self.istota}):\n  Życie={self.ciało}\n  Atak={self.atak}\n  Obrona={self.obrona}\n  punkty oszczędzienia = {self.oszczędzenie}\n  broń: {self.broń.nazwa}\n  zbroja: {self.zbroja.nazwa}"
-w = 5
+w = 40
+k = 40
 pos1 = Postać(
     "człowiek","oba szkoły", "Tomek", "Kowalski",
     200.0, 250.0, 50.0, 10.0, 75.0, 12.5, 12.5, 175.0, 175.0,
     100.0, 100.0, 100.0, 100.0,
-    10.0, {"głowa": 10, "klatka": 10, "lręka": 5, "pręka": 0, "brzuch": 10, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
+    25, {"głowa": 10, "klatka": 10, "lręka": 5, "pręka": 0, "brzuch": 10, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
     daj_zbroje("zbroja_z_błota_i_liści"),
     daj_bron("cięki_patyk"),
     True, False,
-    369004.0*w, -240470.0*w,
-    2*w,7,
+    45784.0*w, 25620.0*-1*w,
+    2,7,
     50, 50, -25, -25
 )
 pos2 = Postać(
-    "Goblin", "cyklista", "Buzg", "Zigug",
+    "Goblin", "cyklista, typ4", "Buzg", "Zigug",
     200000.0, 250000.0, 44800.0, 50000.0, 75000.0, 12500.0, 12500.0, 175000.0, 175000.0,
     200.0, 300.0, 50.0, 100,
     300.0, {"głowa": 100, "klatka": 200, "lręka": 150, "pręka": 150, "brzuch": 200, "lrzebro": 50, "przebro": 50, "lnoga": 300, "pnoga": 300, "ogon": 500},
@@ -506,7 +506,7 @@ pos6 = Postać(
     50, 50, -25, -25
 )
 pos7 = Postać(
-    "Goblin","cyklista", "Azyl","Lazur",
+    "Goblin","cyklista, typ2", "Azyl","Lazur",
     400.0, 500.0, 100.0, 100.0, 150.0, 25.0, 25.0, 350.0, 350.0,
     200.0, 300.0, 50.0, 100,
     100.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
@@ -676,7 +676,7 @@ def gra():
     tlo20 = pygame.transform.scale(tlo20, (800, 600))
     tlo21 = pygame.transform.scale(tlo21, (800, 600))
     tlo22 = pygame.transform.scale(tlo22, (800, 600))
-    speed = 3  # pixel po pixelu
+    speed = pos1.szybkość*w/k  # pixel po pixelu
     stamina = 100.0
     frame = 0
     player_idle1 = pygame.image.load("Tomek.png").convert_alpha()
@@ -728,6 +728,8 @@ def gra():
     )
 
     lata, miesiace, dni, godziny, minuty, sekundy = zamien_czas(calkowite_sekundy)
+    wx = pos1.x
+    wy = pos1.y
     while True:
         a = 10  # domyślna szybkość animacji
 
@@ -830,10 +832,10 @@ def gra():
         else:
             pass
         if keys[pygame.K_LSHIFT] and stamina > 0 and moving:
-            speed = pos1.szybkość+1*w
+            speed = pos1.szybkość+1*w/k
             stamina -= 0.05
         elif not moving:
-            speed = pos1.szybkość
+            speed = pos1.szybkość*w/k
             stamina += 0.01
         elif moving:
             stamina += 0.005
@@ -847,8 +849,8 @@ def gra():
         screen.fill((0, 0, 0))
 
         # pozycja jednego tła na mapie
-        tlo_x = (369004.0*w) - 280
-        tlo_y = (-240470.0*w) - 220
+        tlo_x = wx - 280
+        tlo_y = wy - 220
         tlo_y1 = tlo_y + 600
         tlo_y2 = tlo_y1 + 600
         tlo_y3 = tlo_y2 + 600
@@ -908,14 +910,16 @@ def gra():
         screen.blit(player, (pos1.x - camera_x, pos1.y - camera_y))
 
         tekst_czas = font.render(f"czas: {lata} l. {miesiace} mies. {dni} d. {godziny} godz. {minuty} min. {sekundy} sek.", True, (255, 255, 255)) 
-        położenie_gracza = font.render(f"pozycja: ({pos1.x/w}, {(pos1.y*-1)/w})", True, (255, 255, 255)) 
+        położenie_gracza = font.render(f"pozycja: ({pos1.x/w}, {(pos1.y*-1)/w})", True, (255, 255, 255))
         screen.blit(tekst_czas, (10, 10))
         screen.blit(położenie_gracza, (10, 80))
 
         # aktualna stamina
         pygame.draw.rect(screen, (0, 0, 255), (10, 50, 2 * stamina, 20))
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(k)
         # Aktualizuje podpis okna dodając aktualne FPS-y
         pygame.display.set_caption(f"Artefakty | FPS: {int(clock.get_fps())}")
-if __name__ == "__main__":    gra()
+        def staty_populacji_gry():
+            return f"{Postać.wróżki}\n{Postać.elfy}\n{Postać.gobliny}\n{Postać.ludzie}"
+if __name__ == "__main__": gra()
