@@ -53,6 +53,9 @@ def pokaż_g():
 # 1. Pobieramy statystyki PRZED rzezią
 staty_przed = pokaż_g()
 
+for key, value in staty_przed.items():
+    print(f"{key}: {value}")
+
 # --- WYDARZENIE: RZEŹ (Aktualizacja wartości podstawowych) ---
 ludność_goblinów -= 863
 ludność_ocalałych_goblinów -= 144
@@ -69,4 +72,5 @@ ludność_łowców_z_sensem = ludność_naiwnych_łowców + ludność_nie_naiwny
 
 # 2. Pobieramy statystyki PO rzezi
 staty_po = pokaż_g()
-print(staty_przed["stosunek cyklistów na całą ludność"])
+for key, value in staty_po.items():
+    print(f"{key}: {value}")
