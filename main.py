@@ -108,7 +108,6 @@ class Postać:
         self.mnapojenie = mnapojenie
         self.istota = istota
         
-        # --- SŁOWNIK ŻYCIE ---
         self.życie = {
             "głowa": głowa,
             "klatka": klatka,
@@ -157,9 +156,9 @@ class Postać:
         self.offset_x = offset_x
         self.offset_y = offset_y
         self.hitbox = pygame.Rect(self.x + self.offset_x, self.y + self.offset_y, self.hitbox_w, self.hitbox_h)
-        
-# --- OBLICZANIE WAGI I OBJĘTOŚCI DLA KAŻDEJ CZĘŚCI CIAŁA ---
-        gęstość = 1000 # domyślna gęstość
+        self.maska = pygame.Mask((self.hitbox_w, self.hitbox_h), fill=True)
+
+        gęstość = 1000
         if materiał == "kreda":
             gęstość = 2800
         elif materiał == "Tytan":
@@ -174,18 +173,14 @@ class Postać:
         self.kg = 0.0
         self.objętość_części = {}
 
-        # Przechodzimy przez wszystkie części ciała z definiowanego słownika życia
         for część, hp in self.życie.items():
-            # Waga danej części z HP oraz z przypisanej do niej obrony
             def_punkty = self.za_obrona.get(część, 0)
             kg_części = (hp / 100) + (def_punkty / 10)
 
-            # Obliczenia objętości
             m3 = kg_części / gęstość
             cm3 = m3 * 1_000_000
             km3 = m3 / 1_000_000_000
 
-            # Zapisujemy wszystko do słownika pod nazwą konkretnej części ciała
             self.objętość_części[część] = {
                 "kg": kg_części,
                 "m3": m3,
@@ -193,13 +188,11 @@ class Postać:
                 "km3": km3
             }
 
-            # Sumujemy całkowitą wagę postaci
             self.kg += kg_części
 
-        # Całkowita objętość postaci
         self.objętość = self.kg / gęstość
         
-        self.N = self.atak * 20  # Siła ciężkości w niutonach
+        self.N = self.atak * 20
         Postać.żywi.append(self)
         if istota == "wróżka":
             Postać.wróżki["ludność wróżek"] += 1
@@ -223,117 +216,9 @@ class Postać:
                 Postać.gobliny["ludność cyklistów"] += 1
                 Postać.gobliny["cała ludność ocalonych goblinów"] += 1
 
-    def wczytaj(self, wimie, wNazwisko, wgłód, wmgłód, wnapojenie, wmnapojenie, wistota, wżycie, wartefakty, wza_atak, wza_obrona, watak, wobrona, wzbroja, wbronie, wumiejętności, wciało, wczęści_ciała, wogłuszony, wczas_ogłuszenia, wchce, wmusi, wtury, wdrużyna, wwrogowie, wekwipunek, woszczędzenie, wrelacje, wwochuk_uses, wcozwoj_uses, wx, wy, wplansza):
-        self.imie = wimie
-        self.Nazwisko = wNazwisko
-        self.głód = wgłód
-        self.mgłód = wmgłód
-        self.napojenie = wnapojenie
-        self.mnapojenie = wmnapojenie
-        self.istota = wistota
-        self.życie = wżycie
-        self.artefakty = wartefakty
-        self.za_atak = wza_atak
-        self.za_obrona = wza_obrona
-        self.atak = watak
-        self.obrona = wobrona
-        self.zbroja.wczytaj(wzbroja["nazwa"], wzbroja["obrona"], wzbroja["obrona"], wzbroja["tury"], wzbroja["wytrzymałość"])
-        self.broń.wczytaj(wbronie["nazwa"], wbronie["obrona"], wbronie["obrona"], wbronie["tury"], wbronie["wytrzymałość"])
-        self.umiejętności = wumiejętności
-        self.ciało = wciało
-        self.części_ciała = wczęści_ciała
-        self.ogłuszony = wogłuszony
-        self.czas_ogłuszenia = wczas_ogłuszenia
-        self.chce = wchce
-        self.musi = wmusi
-        self.tury = wtury
-        self.drużyna = wdrużyna
-        self.wrogowie = wwrogowie
-        self.ekwipunek = wekwipunek
-        self.oszczędzenie = woszczędzenie
-        self.relacje = wrelacje
-        self.wochuk_uses = wwochuk_uses
-        self.cozwoj_uses = wcozwoj_uses
-        self.x = wx
-        self.y = wy
-        self.plansza = wplansza
-
-    def po(self):
-        return {
-            "imie": self.imie,
-            "głód": self.głód,
-            "mgłód": self.mgłód,
-            "napojenie": self.napojenie,
-            "mnapojenie": self.mnapojenie,
-            "istota": self.istota,
-            "życie": self.życie,
-            "artefakty": self.artefakty,
-            "za_atak": self.za_atak,
-            "za_obrona": self.za_obrona,
-            "atak": self.atak,
-            "obrona": self.obrona,
-            "zbroja": self.zbroja.po() if self.zbroja else None,
-            "broń": self.broń.po() if self.broń else None,
-            "umiejętności": self.umiejętności,
-            "ciało": self.ciało,
-            "części_ciała": self.części_ciała,
-            "ogłuszony": self.ogłuszony,
-            "czas_ogłuszenia": self.czas_ogłuszenia,
-            "chce": self.chce,
-            "musi": self.musi,
-            "tury": self.tury,
-            "drużyna": self.drużyna,
-            "wrogowie": self.wrogowie,
-            "ekwipunek": self.ekwipunek,
-            "oszczędzenie": self.oszczędzenie,
-            "relacje": self.relacje,
-            "wochuk_uses": self.wochuk_uses,
-            "cozwoj_uses": self.cozwoj_uses
-        }
-
     def aktualizuj_hitbox(self):
         self.hitbox.x = self.x + self.offset_x
         self.hitbox.y = self.y + self.offset_y
-
-    def napraw_zbroje(self, ilość: int):
-        if self.zbroja is None or self.zbroja.wytrzymałość == 0:
-            print(f"{self.imie} nie ma zbroi do naprawy.")
-            return
-        if self.zbroja.nazwa in ["metalowa zbroja", "sdz metalowa zbroja"]:
-            if self.ekwipunek.get("kawałki metalu", 0) < ilość:
-                print(f"{self.imie} nie ma wystarczająco materiału do naprawy.")
-                return
-            self.ekwipunek["kawałki metalu"] -= ilość
-            naprawa = 10 * ilość
-            stara_wytrzymałość = self.zbroja.wytrzymałość
-            self.zbroja.wytrzymałość = min(self.zbroja.wytrzymałość + naprawa, 150)
-            print(f"{self.imie} naprawił zbroję o {naprawa} punktów wytrzymałości({stara_wytrzymałość} → {self.zbroja.wytrzymałość}).")
-
-    def sprawdź_ekwipunek(self):
-        print(f"ekwipunek postaci: {self.imie}")
-        for przedmiot, ilość in self.ekwipunek.items():
-            if ilość > 0:
-                print(f"{przedmiot}: {ilość}")
-
-    def zadaj_obrażenia(self, jaka_część: str, ile: int):
-        if jaka_część in self.życie:
-            self.życie[jaka_część] = max(0, self.życie[jaka_część] - ile)
-            self.ciało = sum(self.życie.values())
-
-    def dodaj_relacje(self, postac, staty_relacji: int):
-        if postac in self.relacje.values():
-            self.relacje[postac] += staty_relacji
-        else:
-            self.relacje[postac] = staty_relacji
-
-    def dodaj_wroga(self, wróg):
-        self.wrogowie.append(wróg)
-
-    def oszczędzanie(self, o_ile: float):
-        self.oszczędzenie += o_ile
-
-    def oszczędzony(self):
-        return self.oszczędzenie > 100
 
     def synchronizacja(self, protokuł: int):
         if protokuł == 3:
@@ -347,11 +232,9 @@ class Postać:
             self.atak = self.za_atak
             if self.istota == "goblin":
                 if self.zbroja.nazwa not in ["łuska smoka", "brak zbroi"]:
-                    print("Goblin może mieć tylko łuskę smoka!")
                     return
             else:
                 if self.zbroja.nazwa == "łuska smoka":
-                    print("Tylko goblin może nosić łuskę smoka!")
                     return
             if self.zbroja is not None:
                 for część in self.obrona:
@@ -359,136 +242,6 @@ class Postać:
                 self.atak += self.zbroja.atak
             if self.broń is not None:
                 self.atak += self.broń.atak
-
-    def dodaj_osobę_do_drużyny_nieoficjalnie(self, p1):
-        if p1 not in self.drużyna:
-            self.drużyna.append(p1)
-
-    def dodaj_osobę_do_drużyny_oficjalnie(self, p1, p2):
-        if p1 not in self.drużyna:
-            p2.drużyna.append(p1)
-            p1.drużyna.append(p2)
-        else:
-            print("już jest")
-
-    def dodaj_osoby_do_drużyny_oficjalnie(self, p1, p2, p3):
-        if p1 not in p2.drużyna:
-            p2.drużyna.append(p1)
-        if p3 not in p2.drużyna:
-            p2.drużyna.append(p3)
-        if p1 not in p3.drużyna:
-            p3.drużyna.append(p1)
-        if p2 not in p3.drużyna:
-            p2.drużyna.append(p2)
-        if p3 not in p1.drużyna:
-            p1.drużyna.append(p3)
-        if p2 not in p1.drużyna:
-            p1.drużyna.append(p2)
-
-    # --- ZMIENIONA FUNKCJA ZAATAKUJ ---
-    def zaatakuj(self, wrog, jaka_czesc: str, walka: Walka):
-        if jaka_czesc not in wrog.życie:
-            walka.komunikat(f"Wskazana część ciała ({jaka_czesc}) nie istnieje!")
-            return
-
-        obrona_czesci = wrog.obrona.get(jaka_czesc, 0)
-
-        if self.chce or self.musi:
-            if wrog in self.drużyna:
-                walka.komunikat("chcesz zatakować swojego? co jest z tabą nie tak")
-                return
-            elif self.broń.tury > 0:
-                self.broń.tury -= 1
-                return
-            elif self.broń.wytrzymałość == 0:
-                walka.komunikat(f"{self.imie} nie może zaatakować, bo {self.broń.nazwa} jest stępiona!")
-                return
-            elif jaka_czesc == "głowa" and randint(1, 100) != 1:
-                walka.komunikat(f"{self.imie} chybił atak w głowę {wrog.imie}!")
-                return
-            elif wrog.istota == "goblin" and jaka_czesc == "głowa" and randint(1, 1000) != 1:
-                walka.komunikat(f"{self.imie} chybił atak w głowę goblina o imieniu {wrog.imie}!")
-                return
-
-            if self.broń.nazwa in ["włócznia", "ostra włócznia"]:
-                for i in range(3):
-                    if randint(1, wrog.szybkość) < self.szybkość_ataku:
-                        walka.komunikat(f"{self.imie} uniknął ataku {wrog.imie}!")
-                    
-                    obrazenia = max(0, randint(int(self.atak - (self.atak * 0.1)), int(self.atak)) - obrona_czesci)
-                    obrażenia_obrony = obrona_czesci * 0.1
-                    self.obrona[jaka_czesc] = max(0, self.obrona.get(jaka_czesc, 0) - obrażenia_obrony)
-                    
-                    aktualne_hp = wrog.życie[jaka_czesc]
-                    nowe_hp = max(0, aktualne_hp - obrazenia)
-                    wrog.życie[jaka_czesc] = nowe_hp
-                    
-                    rzeczywiste_obrazenia = aktualne_hp - nowe_hp
-                    wrog.ciało = sum(wrog.życie.values())
-                    
-                    walka.komunikat(f"{wrog.imie} dostał {rzeczywiste_obrazenia} obrażeń w {jaka_czesc}!")
-                    walka.komunikat(f"{wrog.imie} ma {nowe_hp} HP w {jaka_czesc}")
-                
-                if self.broń.wytrzymałość != 0:
-                    self.broń.wytrzymałość = max(0, self.broń.wytrzymałość - 1)
-                if self.broń.wytrzymałość == 0:
-                    walka.komunikat(f"{self.imie} nie może zaatakować, ponieważ {self.broń.nazwa} jest stępiona!")
-                    return
-            else:
-                obrazenia = max(0, randint(int(self.atak - (self.atak * 0.1)), int(self.atak)) - obrona_czesci)
-                obrażenia_obrony = obrona_czesci * 0.1
-                self.obrona[jaka_czesc] = max(0, self.obrona.get(jaka_czesc, 0) - obrażenia_obrony)
-                
-                aktualne_hp = wrog.życie[jaka_czesc]
-                nowe_hp = max(0, aktualne_hp - obrazenia)
-                wrog.życie[jaka_czesc] = nowe_hp
-                
-                rzeczywiste_obrazenia = aktualne_hp - nowe_hp
-                wrog.ciało = sum(wrog.życie.values())
-                
-                walka.komunikat(f"{wrog.imie} dostał {rzeczywiste_obrazenia} obrażeń w {jaka_czesc}!")
-                walka.komunikat(f"{wrog.imie} ma {nowe_hp} HP w {jaka_czesc}")
-                
-            if self.broń.wytrzymałość != 0:
-                self.broń.wytrzymałość = max(0, self.broń.wytrzymałość - 1)
-        else:
-            if not self.chce:
-                walka.komunikat("nie chcę atakować")
-
-    def zyje(self):
-        return self.ciało > 0 or self.życie.get("głowa", 0) > 0
-
-    def dodaj_artefakt(self, nazwa, wymuszony_slot):
-        self.artefakty[wymuszony_slot] = nazwa
-
-    def ma_artefakt(self, nazwa: str):
-        return nazwa in self.artefakty.values()
-
-    def użyj_wochuk(self):
-        if not self.ma_artefakt("wochuk"):
-            return f"{self.imie} nie posiada artefaktu Wochuk."
-        for przeciwnik in self.wrogowie:
-            użycia = self.wochuk_uses.get(przeciwnik, 0)
-            szansa = max(0.5 - (użycia * 0.1), 0)
-            if random() < szansa:
-                przeciwnik.ogłuszony = True
-                print(f"{przeciwnik.imie} został ogłuszony przez Wochuka!")
-                self.wochuk_uses[przeciwnik] = użycia + 1
-                self.czas_ogłuszenia = 3
-            else:
-                print(f"{przeciwnik.imie} oparł się działaniu Wochuka.")
-
-    def użyj_cozwój(self, przeciwnik):
-        if "cozwój" not in self.artefakty:
-            return f"{self.imie} nie posiada artefaktu Cozwój."
-        if self.cozwoj_uses >= 10:
-            return f"{self.imie} zużył już cały artefakt Cozwój."
-        self.cozwoj_uses += 1
-        przeciwnik.umiejętności = []
-        return f"{przeciwnik.imie} został cofnięty do epoki kamienia łupanego!"
-
-    def __str__(self):
-        return f"{self.imie}({self.istota}):\n  Życie={self.ciało}\n  Atak={self.atak}\n  Obrona={self.obrona}\n  punkty oszczędzienia = {self.oszczędzenie}\n  broń: {self.broń.nazwa}\n  zbroja: {self.zbroja.nazwa}"
 
 w = 400
 k = 50
@@ -529,7 +282,7 @@ pos3 = Postać(
     50, 50, -25, -25
 )
 pos4 = Postać(
-    "elf","nie ma typu", "lód", "Romeo", "Monteculsi",
+    "elf","nie ma typu", "Romeo", "Monteculsi",
     200.0, 250.0, 50.0, 50.0, 75.0, 12.5, 12.5, 175.0, 175.0,
     100.0, 100.0, 100.0, 100.0,
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -541,7 +294,7 @@ pos4 = Postać(
     50, 50, -25, -25
 )
 pos5 = Postać(
-    "elf","nie ma typu", "lód", "Rukur", "Ragnarsson",
+    "elf","nie ma typu", "Rukur", "Ragnarsson",
     200.0, 250.0, 50.0, 50.0, 75.0, 12.5, 12.5, 175.0, 175.0,
     100.0, 100.0, 100.0, 100.0,
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -553,7 +306,7 @@ pos5 = Postać(
     50, 50, -25, -25
 )
 pos6 = Postać(
-    "elf","nie ma typu", "lód", "Rokil", "Ragnarsson",
+    "elf","nie ma typu", "Rokil", "Ragnarsson",
     200.0, 250.0, 50.0, 50.0, 75.0, 12.5, 12.5, 175.0, 175.0,
     100.0, 100.0, 100.0, 100.0,
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -565,7 +318,7 @@ pos6 = Postać(
     50, 50, -25, -25
 )
 pos7 = Postać(
-    "Goblin","cyklista, typ2", "Popiół", "Azyl","Lazur",
+    "Goblin","cyklista, typ2", "Azyl","Lazur",
     400.0, 500.0, 100.0, 100.0, 150.0, 25.0, 25.0, 350.0, 350.0,
     200.0, 300.0, 50.0, 100,
     100.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
@@ -577,7 +330,7 @@ pos7 = Postać(
     50, 50, -25, -25
 )
 pos8 = Postać(
-    "Goblin", "ocalały", "Tytan", "Zazul", "Zigug",
+    "Goblin", "ocalały", "Zazul", "Zigug",
     200000.0, 250000.0, 44800.0, 50000.0, 75000.0, 12500.0, 12500.0, 175000.0, 175000.0,
     200.0, 300.0, 50.0, 100,
     300.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
@@ -589,7 +342,7 @@ pos8 = Postać(
     50, 50, -25, -25
 )
 pos9 = Postać(
-    "człowiek", "szkoła spiczastych jastrząbi", "Kamień", "Koralina", "Kowalska",
+    "człowiek", "szkoła spiczastych jastrząbi", "Koralina", "Kowalska",
     5000.0, 6250.0, 1250.0, 1250.0, 1875.0, 312.5, 312.5, 4375.0, 4375.0,
     100.0, 100.0, 100.0, 100.0,
     125.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -601,7 +354,7 @@ pos9 = Postać(
     50, 50, -25, -25
 )
 pos10 = Postać(
-    "człowiek", "szkoła skalnych rycerzy/wędrowców", "Kamień", "Kamil", "Radziński",
+    "człowiek", "szkoła skalnych rycerzy/wędrowców", "Kamil", "Radziński",
     5000.0, 6250.0, 1250.0, 1250.0, 1875.0, 312.5, 312.5, 4375.0, 4375.0,
     100.0, 100.0, 100.0, 100.0,
     125.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -630,6 +383,7 @@ pos3.dodaj_relacje(pos1.imie, {"zaufanie": 20, "atak": 0, "decyzje": []})
 pos4.synchronizacja(1)
 pos5.synchronizacja(1)
 pos6.synchronizacja(1)
+pos1.synchronizacja(1)
 
 def zamien_czas(sekundy):
     rok = 365 * 24 * 60 * 60
@@ -640,20 +394,64 @@ def zamien_czas(sekundy):
 
     lata = sekundy // rok
     sekundy %= rok
-
     miesiace = sekundy // miesiac
     sekundy %= miesiac
-
     dni = sekundy // dzien
     sekundy %= dzien
-
     godziny = sekundy // godzina
     sekundy %= godzina
-
     minuty = sekundy // minuta
     sekundy %= minuta
 
     return lata, miesiace, dni, godziny, minuty, sekundy
+
+class Przeszkoda:
+    def __init__(self, x, y, image):
+        self.x = x
+        self.y = y
+        self.image = image
+        self.maska = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect(topleft=(x, y))
+        self.points = self.maska.outline()
+
+    def sprawdz_kolizje(self, postac):
+        offset = (int(self.x - postac.hitbox.x), int(self.y - postac.hitbox.y))
+        return postac.maska.overlap(self.maska, offset) is not None
+
+    def rysuj_obrys(self, screen, camera_x, camera_y):
+        if len(self.points) > 1:
+            punkty_ekranowe = [(p[0] + self.x - camera_x, p[1] + self.y - camera_y) for p in self.points]
+            pygame.draw.lines(screen, (0, 255, 0), True, punkty_ekranowe, 2)
+
+# --- KLASA ŚCIANA DLA NIEWIDZIALNYCH SKOŚNYCH BARIER ---
+class Ściana:
+    def __init__(self, punkty):
+        self.punkty = punkty
+        
+        min_x = min(p[0] for p in punkty)
+        max_x = max(p[0] for p in punkty)
+        min_y = min(p[1] for p in punkty)
+        max_y = max(p[1] for p in punkty)
+        
+        self.x = min_x
+        self.y = min_y
+        szerokosc = max_x - min_x
+        wysokosc = max_y - min_y
+
+        punkty_lokalne = [(p[0] - min_x, p[1] - min_y) for p in punkty]
+
+        powierzchnia = pygame.Surface((szerokosc, wysokosc), pygame.SRCALPHA)
+        pygame.draw.polygon(powierzchnia, (255, 255, 255), punkty_lokalne)
+
+        self.maska = pygame.mask.from_surface(powierzchnia)
+
+    def sprawdz_kolizje(self, postac):
+        offset = (int(self.x - postac.hitbox.x), int(self.y - postac.hitbox.y))
+        return postac.maska.overlap(self.maska, offset) is not None
+
+    def rysuj_obrys(self, screen, camera_x, camera_y):
+        punkty_ekranowe = [(p[0] - camera_x, p[1] - camera_y) for p in self.punkty]
+        pygame.draw.polygon(screen, (0, 255, 0), punkty_ekranowe, 2)
 
 def gra():
     pygame.init()
@@ -692,12 +490,12 @@ def gra():
     deska1 = rozmiar_deski(388, "deska1")
     deska2 = rozmiar_deski(216, "deska7")
     deska3 = rozmiar_deski(384, "deska4")
-    box1 = rozmiar_boxu(252.252, "box1")
-    box2 = rozmiar_boxu(251.5, "box5")
-    box3 = rozmiar_boxu(252.452, "box4")
-    box4 = rozmiar_boxu(250.1, "box1")
-    box5 = rozmiar_boxu(253.645, "box1")
-    box6 = rozmiar_boxu(250, "box3")
+    
+    img_box1 = rozmiar_boxu(252.252, "box1")
+    img_box2 = rozmiar_boxu(251.5, "box2")
+    img_box3 = rozmiar_boxu(252.452, "box4")
+    img_box4 = rozmiar_boxu(250.1, "box1")
+    img_box5 = rozmiar_boxu(253.645, "box1")
     
     tlo = pygame.image.load("tlo.png").convert()
     tlo1 = pygame.image.load("tlo1.png").convert()
@@ -719,9 +517,6 @@ def gra():
     tlo17 = pygame.transform.rotate(tlo15, 90)
     tlo18 = pygame.transform.rotate(tlo15, 180)
     tlo19 = pygame.transform.rotate(tlo15, 270)
-    tlo20 = pygame.transform.rotate(tlo16, 90)
-    tlo21 = pygame.transform.rotate(tlo16, 180)
-    tlo22 = pygame.transform.rotate(tlo16, 270)
     
     tlo = pygame.transform.scale(tlo, (800, 600))
     tlo1 = pygame.transform.scale(tlo1, (800, 600))
@@ -743,9 +538,6 @@ def gra():
     tlo17 = pygame.transform.scale(tlo17, (800, 600))
     tlo18 = pygame.transform.scale(tlo18, (800, 600))
     tlo19 = pygame.transform.scale(tlo19, (800, 600))
-    tlo20 = pygame.transform.scale(tlo20, (800, 600))
-    tlo21 = pygame.transform.scale(tlo21, (800, 600))
-    tlo22 = pygame.transform.scale(tlo22, (800, 600))
     
     speed = pos1.szybkość * w / k
     stamina = 100.0
@@ -779,25 +571,50 @@ def gra():
     player = player_idle1
 
     ostatnia_aktualizacja = time.time()
-    lata = 390006
-    miesiace = 5
-    dni = 24
-    godziny = 17
-    minuty = 26
-    sekundy = 35
+    lata, miesiace, dni, godziny, minuty, sekundy = 390006, 5, 24, 17, 26, 35
 
     calkowite_sekundy = (
-        sekundy +
-        (minuty * 60) +
-        (godziny * 3600) +
-        (dni * 86400) +
-        (miesiace * 30 * 86400) +
-        (lata * 365 * 86400)
+        sekundy + (minuty * 60) + (godziny * 3600) +
+        (dni * 86400) + (miesiace * 30 * 86400) + (lata * 365 * 86400)
     )
 
-    lata, miesiace, dni, godziny, minuty, sekundy = zamien_czas(calkowite_sekundy)
     wx = pos1.x
     wy = pos1.y
+    
+    tb_x = wx - 280
+    tb_y = wy - 220
+    tb_y1 = tb_y + 600
+    tb_y2 = tb_y1 + 600
+    tb_y3 = tb_y2 + 600
+    tb_y4 = tb_y3 + 600
+    tb_x3 = tb_x - 1600
+    tb_x4 = tb_x + 1600
+
+    przeszkody = [
+        Przeszkoda(tb_x3 + 250, tb_y1 + 300, img_box1),
+        Przeszkoda(tb_x3 + 230, tb_y3 - 150, img_box2),
+        Przeszkoda(tb_x3 + 240, tb_y4 + 56,  img_box3),
+        Przeszkoda(tb_x4 + 310, tb_y1 + 300, img_box4),
+        Przeszkoda(tb_x4 + 310, tb_y3 - 300, img_box5),
+    ]
+
+    # --- DEFINIOWANIE NIEWIDZIALNYCH ŚCIAN NA MAPIE ---
+    # Prosta pionowa ściana (lewy górny róg w punkcie X=500, Y=300)
+    sciany = [
+    # Ściana odsunięta o 600 px w prawo i 100 px w dół od lewego rogu kamery
+    Ściana([
+        (tb_x + 640, tb_y + 380), 
+        (tb_x + 650, tb_y + 380), 
+        (tb_x + 650, tb_y + 600), 
+        (tb_x + 640, tb_y + 600)
+    ]),
+    Ściana([
+        (tb_x + 160, tb_y + 400), 
+        (tb_x + 190, tb_y + 400), 
+        (tb_x + 190, tb_y + 600), 
+        (tb_x + 160, tb_y + 600)
+    ])
+    ]
     
     while True:
         a = 10
@@ -811,83 +628,80 @@ def gra():
         camera_x = pos1.x - 280
         camera_y = pos1.y - 220
         keys = pygame.key.get_pressed()
-        lista = [
-            keys[pygame.K_w],
-            keys[pygame.K_UP],
-            keys[pygame.K_s],
-            keys[pygame.K_DOWN],
-            keys[pygame.K_a],
-            keys[pygame.K_RIGHT],
-            keys[pygame.K_d],
-            keys[pygame.K_LEFT]
-        ]
-        moving = any(lista)
+        moving = any([keys[k] for k in (pygame.K_w, pygame.K_UP, pygame.K_s, pygame.K_DOWN, pygame.K_a, pygame.K_RIGHT, pygame.K_d, pygame.K_LEFT)])
 
         if moving:
             frame += 1
         if keys[pygame.K_LSHIFT] and stamina > 1:
             a = 4
         b = a * 2
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 exit()
+
         if not moving:
             frame = 0
-            if player in [player_walk1, player_walk2]:
-                player = player_idle1
-            if player in [player_walk3, player_walk4]:
-                player = player_idle2
-            if player in [player_walk5, player_walk6]:
-                player = player_idle3
-            if player in [player_walk7, player_walk8]:
-                player = player_idle4
-        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
-            pos1.x -= speed
-        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            pos1.x += speed
-        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
-            pos1.y += speed
-        if keys[pygame.K_w] or keys[pygame.K_UP]:
-            pos1.y -= speed
-            
+            if player in [player_walk1, player_walk2]: player = player_idle1
+            if player in [player_walk3, player_walk4]: player = player_idle2
+            if player in [player_walk5, player_walk6]: player = player_idle3
+            if player in [player_walk7, player_walk8]: player = player_idle4
+
+        stara_x = pos1.x
+        stara_y = pos1.y
+
+        # Ruch X + sprawdzanie kolizji ze skrzynkami i ścianami
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]: pos1.x -= speed
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]: pos1.x += speed
         pos1.aktualizuj_hitbox()
-        
+
+        for p in przeszkody:
+            if p.sprawdz_kolizje(pos1):
+                pos1.x = stara_x
+                pos1.aktualizuj_hitbox()
+                break
+
+        for s in sciany:
+            if s.sprawdz_kolizje(pos1):
+                pos1.x = stara_x
+                pos1.aktualizuj_hitbox()
+                break
+
+        # Ruch Y + sprawdzanie kolizji ze skrzynkami i ścianami
+        if keys[pygame.K_s] or keys[pygame.K_DOWN]: pos1.y += speed
+        if keys[pygame.K_w] or keys[pygame.K_UP]: pos1.y -= speed
+        pos1.aktualizuj_hitbox()
+
+        for p in przeszkody:
+            if p.sprawdz_kolizje(pos1):
+                pos1.y = stara_y
+                pos1.aktualizuj_hitbox()
+                break
+
+        for s in sciany:
+            if s.sprawdz_kolizje(pos1):
+                pos1.y = stara_y
+                pos1.aktualizuj_hitbox()
+                break
+
+        # Animacje
         if keys[pygame.K_w] or keys[pygame.K_UP]:
-            if frame < a/2:
-                player = player_walk3
-            if frame > a/2:
-                player = player_walk4
-            if frame >= a:
-                player = player_walk3
-                frame = 0
+            player = player_walk3 if frame < a/2 else player_walk4
+            if frame >= a: frame = 0
         elif keys[pygame.K_s] or keys[pygame.K_DOWN]:
-            if frame < a/2:
-                player = player_walk1
-            if frame > a/2:
-                player = player_walk2
-            if frame >= a:
-                frame = 0
+            player = player_walk1 if frame < a/2 else player_walk2
+            if frame >= a: frame = 0
         elif keys[pygame.K_a] or keys[pygame.K_LEFT]:
-            if frame <= b/4:
-                player = player_walk7
-            if frame > b/4 and frame < b/2:
-                player = player_idle4
-            if frame >= b/2 and frame < b:
-                player = player_walk8
-            if frame >= b:
-                player = player_walk7
-                frame = 0               
+            if frame <= b/4: player = player_walk7
+            elif frame < b/2: player = player_idle4
+            elif frame < b: player = player_walk8
+            else: player = player_walk7; frame = 0
         elif keys[pygame.K_d] or keys[pygame.K_RIGHT]:
-            if frame <= b/5:
-                player = player_walk5
-            if frame > b/5 and frame < b/2:
-                player = player_idle3
-            if frame >= b/2 and frame < b:
-                player = player_walk6
-            elif frame >= b:
-                player = player_walk5
-                frame = 0
+            if frame <= b/5: player = player_walk5
+            elif frame < b/2: player = player_idle3
+            elif frame < b: player = player_walk6
+            else: player = player_walk5; frame = 0
 
         if keys[pygame.K_q]:
             pygame.quit()
@@ -902,10 +716,7 @@ def gra():
         elif moving:
             stamina += 0.005
             
-        if stamina > 100:
-            stamina = 100
-        elif stamina <= -1:
-            stamina = -1
+        stamina = max(-1.0, min(100.0, stamina))
 
         screen.fill((0, 0, 0))
 
@@ -919,13 +730,13 @@ def gra():
         tlo_y6 = tlo_y5 + 600
         tlo_y7 = tlo_y5 + 300
         tlo_y8 = tlo_y6 + 600
-        tlo_y9 = tlo_y8 + 600
         tlo_x1 = tlo_x + 800
         tlo_x2 = tlo_x - 800
         tlo_x3 = tlo_x2 - 800
         tlo_x4 = tlo_x1 + 800
         tlo_x5 = tlo_x2 + 400
 
+        # Rysowanie tła
         screen.blit(tlo, (tlo_x - camera_x, tlo_y - camera_y))
         screen.blit(tlo1, (tlo_x - camera_x, tlo_y1 - camera_y))
         screen.blit(tlo7, (tlo_x2 - camera_x, tlo_y1 - camera_y))
@@ -935,18 +746,13 @@ def gra():
         screen.blit(tlo2, (tlo_x1 - camera_x, tlo_y2 - camera_y))
         screen.blit(tlo5, (tlo_x2 - camera_x, tlo_y2 - camera_y))
         screen.blit(tlo9, (tlo_x3 - camera_x, tlo_y1 - camera_y))
-        screen.blit(box1, ((tlo_x3 + 250) - camera_x, (tlo_y1 + 300) - camera_y))
         screen.blit(tlo10, (tlo_x3 - camera_x, tlo_y2 - camera_y))
         screen.blit(tlo10, (tlo_x3 - camera_x, tlo_y3 - camera_y))
-        screen.blit(box2, ((tlo_x3 + 230) - camera_x, (tlo_y3 - 300) - camera_y))
         screen.blit(tlo11, (tlo_x3 - camera_x, tlo_y4 - camera_y))
-        screen.blit(box3, ((tlo_x3 + 240) - camera_x, (tlo_y4 + 56) - camera_y))
         screen.blit(tlo12, (tlo_x4 - camera_x, tlo_y1 - camera_y))
-        screen.blit(box4, ((tlo_x4 + 310) - camera_x, (tlo_y1 + 300) - camera_y))
         screen.blit(tlo13, (tlo_x4 - camera_x, tlo_y2 - camera_y))
         screen.blit(tlo14, (tlo_x4 - camera_x, tlo_y4 - camera_y))
         screen.blit(tlo13, (tlo_x4 - camera_x, tlo_y3 - camera_y))
-        screen.blit(box5, ((tlo_x4 + 310) - camera_x, (tlo_y3 - 300) - camera_y))
         screen.blit(tlo8, (tlo_x2 - camera_x, tlo_y3 - camera_y))
         screen.blit(tlo2, (tlo_x2 - camera_x, tlo_y3 - camera_y))
         screen.blit(tlo2, (tlo_x1 - camera_x, tlo_y3 - camera_y))
@@ -967,7 +773,20 @@ def gra():
         screen.blit(tlo2, (tlo_x - camera_x, tlo_y8 - camera_y))
         screen.blit(tlo19, (tlo_x3 - camera_x, tlo_y8 - camera_y))
 
+        # Rysowanie skrzynek
+        for p in przeszkody:
+            screen.blit(p.image, (p.x - camera_x, p.y - camera_y))
+
+        # Rysowanie gracza
         screen.blit(player, (pos1.x - camera_x, pos1.y - camera_y))
+
+        # Rysowanie obrysów skrzynek, gracza oraz ścian (debug)
+        pygame.draw.rect(screen, (255, 0, 0), (pos1.hitbox.x - camera_x, pos1.hitbox.y - camera_y, pos1.hitbox.w, pos1.hitbox.h), 2)
+        for p in przeszkody:
+            p.rysuj_obrys(screen, camera_x, camera_y)
+
+        for s in sciany:
+            s.rysuj_obrys(screen, camera_x, camera_y)
 
         tekst_czas = font.render(f"czas: {lata} l. {miesiace} mies. {dni} d. {godziny} godz. {minuty} min. {sekundy} sek.", True, (255, 255, 255)) 
         położenie_gracza = font.render(f"pozycja: ({pos1.x/w}, {(pos1.y*-1)/w})", True, (255, 255, 255))
@@ -979,6 +798,4 @@ def gra():
         clock.tick(k)
         pygame.display.set_caption(f"Artefakty | FPS: {int(clock.get_fps())}")
 
-def staty_populacji_gry():
-    return f"{Postać.wróżki}\n{Postać.elfy}\n{Postać.gobliny}\n{Postać.ludzie}"
-print(pos1.sprawdź_ekwipunek())
+gra()
