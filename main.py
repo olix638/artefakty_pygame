@@ -215,10 +215,117 @@ class Postać:
             if "cyklista" in self.lista_typów:
                 Postać.gobliny["ludność cyklistów"] += 1
                 Postać.gobliny["cała ludność ocalonych goblinów"] += 1
+    def wczytaj(self, wimie, wNazwisko, wgłód, wmgłód, wnapojenie, wmnapojenie, wistota, wżycie, wartefakty, wza_atak, wza_obrona, watak, wobrona, wzbroja, wbronie, wumiejętności, wciało, wczęści_ciała, wogłuszony, wczas_ogłuszenia, wchce, wmusi, wtury, wdrużyna, wwrogowie, wekwipunek, woszczędzenie, wrelacje, wwochuk_uses, wcozwoj_uses, wx, wy, wplansza):
+        self.imie = wimie
+        self.Nazwisko = wNazwisko
+        self.głód = wgłód
+        self.mgłód = wmgłód
+        self.napojenie = wnapojenie
+        self.mnapojenie = wmnapojenie
+        self.istota = wistota
+        self.życie = wżycie
+        self.artefakty = wartefakty
+        self.za_atak = wza_atak
+        self.za_obrona = wza_obrona
+        self.atak = watak
+        self.obrona = wobrona
+        self.zbroja.wczytaj(wzbroja["nazwa"], wzbroja["obrona"], wzbroja["obrona"], wzbroja["tury"], wzbroja["wytrzymałość"])
+        self.broń.wczytaj(wbronie["nazwa"], wbronie["obrona"], wbronie["obrona"], wbronie["tury"], wbronie["wytrzymałość"])
+        self.umiejętności = wumiejętności
+        self.ciało = wciało
+        self.części_ciała = wczęści_ciała
+        self.ogłuszony = wogłuszony
+        self.czas_ogłuszenia = wczas_ogłuszenia
+        self.chce = wchce
+        self.musi = wmusi
+        self.tury = wtury
+        self.drużyna = wdrużyna
+        self.wrogowie = wwrogowie
+        self.ekwipunek = wekwipunek
+        self.oszczędzenie = woszczędzenie
+        self.relacje = wrelacje
+        self.wochuk_uses = wwochuk_uses
+        self.cozwoj_uses = wcozwoj_uses
+        self.x = wx
+        self.y = wy
+        self.plansza = wplansza
+
+    def po(self):
+        return {
+            "imie": self.imie,
+            "głód": self.głód,
+            "mgłód": self.mgłód,
+            "napojenie": self.napojenie,
+            "mnapojenie": self.mnapojenie,
+            "istota": self.istota,
+            "życie": self.życie,
+            "artefakty": self.artefakty,
+            "za_atak": self.za_atak,
+            "za_obrona": self.za_obrona,
+            "atak": self.atak,
+            "obrona": self.obrona,
+            "zbroja": self.zbroja.po() if self.zbroja else None,
+            "broń": self.broń.po() if self.broń else None,
+            "umiejętności": self.umiejętności,
+            "ciało": self.ciało,
+            "części_ciała": self.części_ciała,
+            "ogłuszony": self.ogłuszony,
+            "czas_ogłuszenia": self.czas_ogłuszenia,
+            "chce": self.chce,
+            "musi": self.musi,
+            "tury": self.tury,
+            "drużyna": self.drużyna,
+            "wrogowie": self.wrogowie,
+            "ekwipunek": self.ekwipunek,
+            "oszczędzenie": self.oszczędzenie,
+            "relacje": self.relacje,
+            "wochuk_uses": self.wochuk_uses,
+            "cozwoj_uses": self.cozwoj_uses
+        }
 
     def aktualizuj_hitbox(self):
         self.hitbox.x = self.x + self.offset_x
         self.hitbox.y = self.y + self.offset_y
+
+    def napraw_zbroje(self, ilość: int):
+        if self.zbroja is None or self.zbroja.wytrzymałość == 0:
+            print(f"{self.imie} nie ma zbroi do naprawy.")
+            return
+        if self.zbroja.nazwa in ["metalowa zbroja", "sdz metalowa zbroja"]:
+            if self.ekwipunek.get("kawałki metalu", 0) < ilość:
+                print(f"{self.imie} nie ma wystarczająco materiału do naprawy.")
+                return
+            self.ekwipunek["kawałki metalu"] -= ilość
+            naprawa = 10 * ilość
+            stara_wytrzymałość = self.zbroja.wytrzymałość
+            self.zbroja.wytrzymałość = min(self.zbroja.wytrzymałość + naprawa, 150)
+            print(f"{self.imie} naprawił zbroję o {naprawa} punktów wytrzymałości({stara_wytrzymałość} → {self.zbroja.wytrzymałość}).")
+
+    def sprawdź_ekwipunek(self):
+        print(f"ekwipunek postaci: {self.imie}")
+        for przedmiot, ilość in self.ekwipunek.items():
+            if ilość > 0:
+                print(f"{przedmiot}: {ilość}")
+
+    def zadaj_obrażenia(self, jaka_część: str, ile: int):
+        if jaka_część in self.życie:
+            self.życie[jaka_część] = max(0, self.życie[jaka_część] - ile)
+            self.ciało = sum(self.życie.values())
+
+    def dodaj_relacje(self, postac, staty_relacji: int):
+        if postac in self.relacje.values():
+            self.relacje[postac] += staty_relacji
+        else:
+            self.relacje[postac] = staty_relacji
+
+    def dodaj_wroga(self, wróg):
+        self.wrogowie.append(wróg)
+
+    def oszczędzanie(self, o_ile: float):
+        self.oszczędzenie += o_ile
+
+    def oszczędzony(self):
+        return self.oszczędzenie > 100
 
     def synchronizacja(self, protokuł: int):
         if protokuł == 3:
@@ -232,9 +339,11 @@ class Postać:
             self.atak = self.za_atak
             if self.istota == "goblin":
                 if self.zbroja.nazwa not in ["łuska smoka", "brak zbroi"]:
+                    print("Goblin może mieć tylko łuskę smoka!")
                     return
             else:
                 if self.zbroja.nazwa == "łuska smoka":
+                    print("Tylko goblin może nosić łuskę smoka!")
                     return
             if self.zbroja is not None:
                 for część in self.obrona:
@@ -242,6 +351,136 @@ class Postać:
                 self.atak += self.zbroja.atak
             if self.broń is not None:
                 self.atak += self.broń.atak
+
+    def dodaj_osobę_do_drużyny_nieoficjalnie(self, p1):
+        if p1 not in self.drużyna:
+            self.drużyna.append(p1)
+
+    def dodaj_osobę_do_drużyny_oficjalnie(self, p1, p2):
+        if p1 not in self.drużyna:
+            p2.drużyna.append(p1)
+            p1.drużyna.append(p2)
+        else:
+            print("już jest")
+
+    def dodaj_osoby_do_drużyny_oficjalnie(self, p1, p2, p3):
+        if p1 not in p2.drużyna:
+            p2.drużyna.append(p1)
+        if p3 not in p2.drużyna:
+            p2.drużyna.append(p3)
+        if p1 not in p3.drużyna:
+            p3.drużyna.append(p1)
+        if p2 not in p3.drużyna:
+            p2.drużyna.append(p2)
+        if p3 not in p1.drużyna:
+            p1.drużyna.append(p3)
+        if p2 not in p1.drużyna:
+            p1.drużyna.append(p2)
+
+    # --- ZMIENIONA FUNKCJA ZAATAKUJ ---
+    def zaatakuj(self, wrog, jaka_czesc: str, walka: Walka):
+        if jaka_czesc not in wrog.życie:
+            walka.komunikat(f"Wskazana część ciała ({jaka_czesc}) nie istnieje!")
+            return
+
+        obrona_czesci = wrog.obrona.get(jaka_czesc, 0)
+
+        if self.chce or self.musi:
+            if wrog in self.drużyna:
+                walka.komunikat("chcesz zatakować swojego? co jest z tabą nie tak")
+                return
+            elif self.broń.tury > 0:
+                self.broń.tury -= 1
+                return
+            elif self.broń.wytrzymałość == 0:
+                walka.komunikat(f"{self.imie} nie może zaatakować, bo {self.broń.nazwa} jest stępiona!")
+                return
+            elif jaka_czesc == "głowa" and randint(1, 100) != 1:
+                walka.komunikat(f"{self.imie} chybił atak w głowę {wrog.imie}!")
+                return
+            elif wrog.istota == "goblin" and jaka_czesc == "głowa" and randint(1, 1000) != 1:
+                walka.komunikat(f"{self.imie} chybił atak w głowę goblina o imieniu {wrog.imie}!")
+                return
+
+            if self.broń.nazwa in ["włócznia", "ostra włócznia"]:
+                for i in range(3):
+                    if randint(1, wrog.szybkość) < self.szybkość_ataku:
+                        walka.komunikat(f"{self.imie} uniknął ataku {wrog.imie}!")
+                    
+                    obrazenia = max(0, randint(int(self.atak - (self.atak * 0.1)), int(self.atak)) - obrona_czesci)
+                    obrażenia_obrony = obrona_czesci * 0.1
+                    self.obrona[jaka_czesc] = max(0, self.obrona.get(jaka_czesc, 0) - obrażenia_obrony)
+                    
+                    aktualne_hp = wrog.życie[jaka_czesc]
+                    nowe_hp = max(0, aktualne_hp - obrazenia)
+                    wrog.życie[jaka_czesc] = nowe_hp
+                    
+                    rzeczywiste_obrazenia = aktualne_hp - nowe_hp
+                    wrog.ciało = sum(wrog.życie.values())
+                    
+                    walka.komunikat(f"{wrog.imie} dostał {rzeczywiste_obrazenia} obrażeń w {jaka_czesc}!")
+                    walka.komunikat(f"{wrog.imie} ma {nowe_hp} HP w {jaka_czesc}")
+                
+                if self.broń.wytrzymałość != 0:
+                    self.broń.wytrzymałość = max(0, self.broń.wytrzymałość - 1)
+                if self.broń.wytrzymałość == 0:
+                    walka.komunikat(f"{self.imie} nie może zaatakować, ponieważ {self.broń.nazwa} jest stępiona!")
+                    return
+            else:
+                obrazenia = max(0, randint(int(self.atak - (self.atak * 0.1)), int(self.atak)) - obrona_czesci)
+                obrażenia_obrony = obrona_czesci * 0.1
+                self.obrona[jaka_czesc] = max(0, self.obrona.get(jaka_czesc, 0) - obrażenia_obrony)
+                
+                aktualne_hp = wrog.życie[jaka_czesc]
+                nowe_hp = max(0, aktualne_hp - obrazenia)
+                wrog.życie[jaka_czesc] = nowe_hp
+                
+                rzeczywiste_obrazenia = aktualne_hp - nowe_hp
+                wrog.ciało = sum(wrog.życie.values())
+                
+                walka.komunikat(f"{wrog.imie} dostał {rzeczywiste_obrazenia} obrażeń w {jaka_czesc}!")
+                walka.komunikat(f"{wrog.imie} ma {nowe_hp} HP w {jaka_czesc}")
+                
+            if self.broń.wytrzymałość != 0:
+                self.broń.wytrzymałość = max(0, self.broń.wytrzymałość - 1)
+        else:
+            if not self.chce:
+                walka.komunikat("nie chcę atakować")
+
+    def zyje(self):
+        return self.ciało > 0 or self.życie.get("głowa", 0) > 0
+
+    def dodaj_artefakt(self, nazwa, wymuszony_slot):
+        self.artefakty[wymuszony_slot] = nazwa
+
+    def ma_artefakt(self, nazwa: str):
+        return nazwa in self.artefakty.values()
+
+    def użyj_wochuk(self):
+        if not self.ma_artefakt("wochuk"):
+            return f"{self.imie} nie posiada artefaktu Wochuk."
+        for przeciwnik in self.wrogowie:
+            użycia = self.wochuk_uses.get(przeciwnik, 0)
+            szansa = max(0.5 - (użycia * 0.1), 0)
+            if random() < szansa:
+                przeciwnik.ogłuszony = True
+                print(f"{przeciwnik.imie} został ogłuszony przez Wochuka!")
+                self.wochuk_uses[przeciwnik] = użycia + 1
+                self.czas_ogłuszenia = 3
+            else:
+                print(f"{przeciwnik.imie} oparł się działaniu Wochuka.")
+
+    def użyj_cozwój(self, przeciwnik):
+        if "cozwój" not in self.artefakty:
+            return f"{self.imie} nie posiada artefaktu Cozwój."
+        if self.cozwoj_uses >= 10:
+            return f"{self.imie} zużył już cały artefakt Cozwój."
+        self.cozwoj_uses += 1
+        przeciwnik.umiejętności = []
+        return f"{przeciwnik.imie} został cofnięty do epoki kamienia łupanego!"
+
+    def __str__(self):
+        return f"{self.imie}({self.istota}):\n  Życie={self.ciało}\n  Atak={self.atak}\n  Obrona={self.obrona}\n  punkty oszczędzienia = {self.oszczędzenie}\n  broń: {self.broń.nazwa}\n  zbroja: {self.zbroja.nazwa}"
 
 w = 400
 k = 50
@@ -255,7 +494,7 @@ pos1 = Postać(
     True, False,
     45784.0*w, 25620.0*-1*w,
     2,7,
-    50, 50, -25, -25
+    150, 200, 25, 0
 )
 pos2 = Postać(
     "Goblin", "cyklista, typ4", "Tytan", "Buzg", "Zigug",
@@ -282,7 +521,7 @@ pos3 = Postać(
     50, 50, -25, -25
 )
 pos4 = Postać(
-    "elf","nie ma typu", "Romeo", "Monteculsi",
+    "elf","nie ma typu", "lód", "Romeo", "Monteculsi",
     200.0, 250.0, 50.0, 50.0, 75.0, 12.5, 12.5, 175.0, 175.0,
     100.0, 100.0, 100.0, 100.0,
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -294,7 +533,7 @@ pos4 = Postać(
     50, 50, -25, -25
 )
 pos5 = Postać(
-    "elf","nie ma typu", "Rukur", "Ragnarsson",
+    "elf","nie ma typu", "lód", "Rukur", "Ragnarsson",
     200.0, 250.0, 50.0, 50.0, 75.0, 12.5, 12.5, 175.0, 175.0,
     100.0, 100.0, 100.0, 100.0,
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -306,7 +545,7 @@ pos5 = Postać(
     50, 50, -25, -25
 )
 pos6 = Postać(
-    "elf","nie ma typu", "Rokil", "Ragnarsson",
+    "elf","nie ma typu", "lód", "Rokil", "Ragnarsson",
     200.0, 250.0, 50.0, 50.0, 75.0, 12.5, 12.5, 175.0, 175.0,
     100.0, 100.0, 100.0, 100.0,
     5.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -318,7 +557,7 @@ pos6 = Postać(
     50, 50, -25, -25
 )
 pos7 = Postać(
-    "Goblin","cyklista, typ2", "Azyl","Lazur",
+    "Goblin","cyklista, typ2", "popiół", "Azyl","Lazur",
     400.0, 500.0, 100.0, 100.0, 150.0, 25.0, 25.0, 350.0, 350.0,
     200.0, 300.0, 50.0, 100,
     100.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
@@ -330,7 +569,7 @@ pos7 = Postać(
     50, 50, -25, -25
 )
 pos8 = Postać(
-    "Goblin", "ocalały", "Zazul", "Zigug",
+    "Goblin", "ocalały", "Tytan", "Zazul", "Zigug",
     200000.0, 250000.0, 44800.0, 50000.0, 75000.0, 12500.0, 12500.0, 175000.0, 175000.0,
     200.0, 300.0, 50.0, 100,
     300.0, {"głowa": 20, "klatka":40, "lręka": 30, "pręka": 30, "brzuch": 50, "lrzebro": 10, "przebro": 10, "lnoga": 5, "pnoga": 5},
@@ -342,7 +581,7 @@ pos8 = Postać(
     50, 50, -25, -25
 )
 pos9 = Postać(
-    "człowiek", "szkoła spiczastych jastrząbi", "Koralina", "Kowalska",
+    "człowiek", "szkoła spiczastych jastrząbi", "Kamień", "Koralina", "Kowalska",
     5000.0, 6250.0, 1250.0, 1250.0, 1875.0, 312.5, 312.5, 4375.0, 4375.0,
     100.0, 100.0, 100.0, 100.0,
     125.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -354,7 +593,7 @@ pos9 = Postać(
     50, 50, -25, -25
 )
 pos10 = Postać(
-    "człowiek", "szkoła skalnych rycerzy/wędrowców", "Kamil", "Radziński",
+    "człowiek", "szkoła skalnych rycerzy/wędrowców", "Ziemia", "Kamil", "Radziński",
     5000.0, 6250.0, 1250.0, 1250.0, 1875.0, 312.5, 312.5, 4375.0, 4375.0,
     100.0, 100.0, 100.0, 100.0,
     125.0, {"głowa": 1, "klatka": 5, "lręka": 2, "pręka": 2, "brzuch": 10, "lrzebro": 5, "przebro": 5, "lnoga": 5, "pnoga": 5},
@@ -368,7 +607,6 @@ pos10 = Postać(
 
 pos1.dodaj_relacje(pos3.imie, {"zaufanie": 20, "atak": 0, "decyzje": []})
 pos1.dodaj_relacje("gracz", {"zaufanie": 0, "decyzje": []})
-pos1.synchronizacja(1)
 pos1.ekwipunek["ciękie patyki"] += 1
 pos1.ekwipunek["kawałki metalu"] += 10
 
@@ -376,14 +614,12 @@ pos1.ekwipunek["kawałki metalu"] += 10
 pos2.życie["ogon"] = 1000000.0
 pos2.części_ciała.append("ogon")
 pos2.synchronizacja(3)
-pos2.synchronizacja(1)
 pos2.ekwipunek["siekiera"] += 1
 
 pos3.dodaj_relacje(pos1.imie, {"zaufanie": 20, "atak": 0, "decyzje": []})
-pos4.synchronizacja(1)
-pos5.synchronizacja(1)
-pos6.synchronizacja(1)
-pos1.synchronizacja(1)
+postacie = [pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9, pos10]
+for postac in postacie:
+    postac.synchronizacja(1)
 
 def zamien_czas(sekundy):
     rok = 365 * 24 * 60 * 60
@@ -601,7 +837,6 @@ def gra():
     # --- DEFINIOWANIE NIEWIDZIALNYCH ŚCIAN NA MAPIE ---
     # Prosta pionowa ściana (lewy górny róg w punkcie X=500, Y=300)
     sciany = [
-    # Ściana odsunięta o 600 px w prawo i 100 px w dół od lewego rogu kamery
     Ściana([
         (tb_x + 640, tb_y + 380), 
         (tb_x + 650, tb_y + 380), 
@@ -613,9 +848,26 @@ def gra():
         (tb_x + 190, tb_y + 400), 
         (tb_x + 190, tb_y + 600), 
         (tb_x + 160, tb_y + 600)
+    ]),
+    Ściana([
+        (tb_x + 140, tb_y1 + 180), 
+        (tb_x + 190, tb_y1 + 180), 
+        (tb_x + 190, tb_y1+ 20), 
+        (tb_x + 140, tb_y1 + 20)
+    ]),
+    Ściana([
+        (tb_x + 100, tb_y1 + 170),
+        (tb_x + 100, tb_y1 + 140),
+        (tb_x3 + 160,tb_y1 + 140),
+        (tb_x3 + 160,tb_y1 + 170)
+    ]),
+    Ściana([
+        (tb_x3 + 160, tb_y1 + 200),
+        (tb_x3 + 160, tb_y1 + 170),
+        (tb_x3 + 245, tb_y1 + 170),
+        (tb_x3 + 245, tb_y1 + 200)    
     ])
     ]
-    
     while True:
         a = 10
         aktualny_czas = int(time.time())
